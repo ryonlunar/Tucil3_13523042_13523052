@@ -1,4 +1,5 @@
-# 📌 Penyelesaian Puzzle Rush Hour Menggunakan Algoritma Pathfinding 
+# Penyelesaian Puzzle Rush Hour Menggunakan Algoritma Pathfinding 
+[![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)
 
 Deskripsi singkat mengenai program yang dibuat.  
 Tuliskan tujuan utama, fitur utama, dan manfaat penggunaannya.
