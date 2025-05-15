@@ -5,11 +5,13 @@ import java.util.*;
 public class UCS extends BaseSearch {
     public PriorityQueue<State> queue;
     public Set<State> visited;
+    public State goalState;
 
     public UCS(State initState){
         super(initState);
         this.queue = new PriorityQueue<>(Comparator.comparingInt(s->s.cost));
         this.visited = new HashSet<>();
+        this.goalState = null;
     }
     
     @Override
@@ -22,6 +24,7 @@ public class UCS extends BaseSearch {
 
             if (currState.isGoal(currState.vehicles.get('P'))){
                 // handle solusi
+                goalState = currState;
                 return;
             }
 
@@ -45,17 +48,8 @@ public class UCS extends BaseSearch {
     }
 
     public State getGoalState(){
-        search();;
-
-        State currState = null;
-
-        for (State s : visited){
-            if (s.isGoal(s.vehicles.get('P'))){
-                currState = s;
-                break;
-            }
-        }
-        return currState;
+        if (goalState == null) search();
+        return goalState;
     }
 
     @Override

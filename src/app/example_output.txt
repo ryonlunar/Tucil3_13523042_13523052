@@ -1,0 +1,80 @@
+Papan awal:
+
+AAB..F 
+..BCDF 
+GPPCDFK
+GH.III 
+GHJ... 
+LLJMM. 
+
+I left
+AAB..F 
+..BCDF 
+GPPCDFK
+GHIII. 
+GHJ... 
+LLJMM. 
+
+F down
+AAB... 
+..BCDF 
+GPPCDFK
+GHIIIF 
+GHJ... 
+LLJMM. 
+
+F down
+AAB... 
+..BCD. 
+GPPCDFK
+GHIIIF 
+GHJ..F 
+LLJMM. 
+
+F down
+AAB... 
+..BCD. 
+GPPCD.K
+GHIIIF 
+GHJ..F 
+LLJMMF 
+
+C up
+AABC.. 
+..BCD. 
+GPP.D.K
+GHIIIF 
+GHJ..F 
+LLJMMF 
+
+D up
+AABCD. 
+..BCD. 
+GPP...K
+GHIIIF 
+GHJ..F 
+LLJMMF 
+
+P right
+AABCD. 
+..BCD. 
+G.PP..K
+GHIIIF 
+GHJ..F 
+LLJMMF 
+
+P right
+AABCD. 
+..BCD. 
+G..PP.K
+GHIIIF 
+GHJ..F 
+LLJMMF 
+
+P right
+AABCD. 
+..BCD. 
+G...PPK
+GHIIIF 
+GHJ..F 
+LLJMMF 

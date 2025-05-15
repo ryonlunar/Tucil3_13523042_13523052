@@ -45,23 +45,22 @@ public class State {
     // deep copy constructor
     // biar gk shallow copy
     // jadi State yang lama gk ikut berubah
+    // deep copy untuk generate successors
     public State copy() {
-        // deep copy kendaraan
         Map<Character, Vehicle> newVehicles = new HashMap<>();
         for (Map.Entry<Character, Vehicle> entry : vehicles.entrySet()) {
             newVehicles.put(entry.getKey(), entry.getValue().copy());
         }
-
         char[][] newBoard = new char[this.tot_rows][this.tot_cols];
         for (int i = 0; i < this.tot_rows; i++) {
-            for (int j = 0; j < this.tot_cols; j++) {
-                newBoard[i][j] = this.board[i][j];
-            }
+            newBoard[i] = Arrays.copyOf(this.board[i], this.tot_cols);
         }
-
-        return new State(newVehicles, this.tot_rows, this.tot_cols, newBoard, this.parent, this.move, this.cost);
+        State newState = new State(newVehicles, this.tot_rows, this.tot_cols, newBoard, this, null, this.cost);
+        // copy exit coordinates
+        newState.exitRow = this.exitRow;
+        newState.exitCol = this.exitCol;
+        return newState;
     }
-
     /*
      * Agar kita tidak mengunjungi ulang State yang sama, kita harus menyimpan semua
      * State yang pernah dikunjungi dalam Set.
@@ -185,8 +184,8 @@ public class State {
                 tryMoveHorizontal(v, succ,-1);
                 tryMoveHorizontal(v, succ,1);
             }else{
-                tryMoveVertical(v, succ, cost);
-                tryMoveVertical(v, succ, cost);
+                tryMoveVertical(v, succ, -1);
+                tryMoveVertical(v, succ, 1);
             }
         }
         return succ;
@@ -237,46 +236,61 @@ public class State {
     }
 
     private void tryMoveVertical(Vehicle vehicle, List<State> successors, int direction) {
-        int newRow;
-
-        if (direction < 0) {
-            newRow = vehicle.row - 1;
-            if (newRow >= 0 && board[newRow][vehicle.col] == '.') {
-                int bottomPos = vehicle.col + vehicle.length - 1;
-                if (bottomPos < tot_rows && board[newRow][vehicle.id] == vehicle.id) {
-                    State newState = this.copy();
-                    Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
-
-                    newState.board[newRow][vehicle.col] = vehicle.id;
-                    newState.board[bottomPos][vehicle.col] = '.';
-
-                    movedVehicle.row = newRow;
-
-                    newState.parent = this;
-                    newState.move = String.valueOf(vehicle.id) + " up";
-                    newState.cost = this.cost + 1;
-
-                    successors.add(newState);
-                }
-            }
-        } else {
-            int bottomRow = vehicle.row + vehicle.length;
-            if (bottomRow < tot_cols && board[vehicle.row][vehicle.col] == '.') {
+    // Untuk kendaraan vertikal, periksa apakah bisa bergerak ke atas/bawah
+    int newRow;
+    
+    if (direction < 0) {
+        // Bergerak ke atas
+        newRow = vehicle.row - 1;
+        // Periksa apakah posisi baru valid
+        if (newRow >= 0 && board[newRow][vehicle.col] == '.') {
+            // Cek apakah bagian bawah kendaraan bisa kosong
+            int bottomPosition = vehicle.row + vehicle.length - 1;
+            if (bottomPosition < tot_rows && board[bottomPosition][vehicle.col] == vehicle.id) {
+                // Buat state baru dengan kendaraan yang sudah digeser
                 State newState = this.copy();
                 Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
+                
                 // Update board
-                newState.board[bottomRow][vehicle.col] = vehicle.id;
-                newState.board[vehicle.row][vehicle.col] = '.';
-
-                movedVehicle.row = vehicle.row + 1;
-
+                newState.board[newRow][vehicle.col] = vehicle.id;
+                newState.board[bottomPosition][vehicle.col] = '.';
+                
+                // Update posisi kendaraan
+                movedVehicle.row = newRow;
+                
+                // Set parent dan move
                 newState.parent = this;
-                newState.move = String.valueOf(vehicle.id) + " down";
+                newState.move = String.valueOf(vehicle.id) + " up";
                 newState.cost = this.cost + 1;
-
+                
                 successors.add(newState);
             }
         }
+    } else {
+        // Bergerak ke bawah
+        int bottomRow = vehicle.row + vehicle.length;
+        if (bottomRow < tot_rows && board[bottomRow][vehicle.col] == '.') {
+            // Buat state baru dengan kendaraan yang sudah digeser
+            State newState = this.copy();
+            Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
+            
+            // Update board
+            newState.board[bottomRow][vehicle.col] = vehicle.id;
+            newState.board[vehicle.row][vehicle.col] = '.';
+            
+            // Update posisi kendaraan
+            movedVehicle.row = vehicle.row + 1;
+            
+            // Set parent dan move
+            newState.parent = this;
+            newState.move = String.valueOf(vehicle.id) + " down";
+            newState.cost = this.cost + 1;
+            
+            successors.add(newState);
+        }
+    }
 
     }
 }
+
+

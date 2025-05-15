@@ -23,7 +23,7 @@ public class OutputHandler {
             out.println(state);
         }
         out.println("Banyaknya node yang dikunjungi: " + visitedNodesCount);
-        out.printf("Waktu eksekusi: %.4f detik\n\n", endTime - startTime);
+        out.printf("Waktu eksekusi: %.4f detik\n\n", (endTime - startTime) / 1000.0);
 
         // cetak board
         for (int i = 0; i < path.size(); i++){
