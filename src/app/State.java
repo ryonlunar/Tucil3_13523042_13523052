@@ -84,6 +84,44 @@ public class State {
         }
         return true;
     }
+
+    // Di dalam class State.java
+
+    public boolean isGoal() {
+        // Cari kendaraan primary (P)
+        Vehicle primary = null;
+        for (Vehicle v : vehicles.values()) {
+            if (v.isPrimary) {
+                primary = v;
+                break;
+            }
+        }
+        
+        if (primary == null) return false;
+
+        // Cek orientasi primary vehicle
+        if (primary.orientation == Orientation.HORIZONTAL) {
+            // Untuk mobil horizontal, cek apakah ujung kanan mencapai exitCol
+            int frontCol = primary.col + primary.length - 1;
+            return primary.row == exitRow && frontCol == exitCol;
+        } else if (primary.orientation == Orientation.HORIZONTAL) {
+            // Untuk mobil horizontal, cek apakah ujung kiri mencapai exitCol
+            int backCol = primary.col - 1;
+            return primary.row == exitRow && backCol == exitCol;
+        }
+        else if (primary.orientation == Orientation.VERTICAL) {
+            // Untuk mobil vertikal, cek apakah ujung bawah mencapai exitRow
+            int frontRow = primary.row + primary.length - 1;
+            return primary.col == exitCol && frontRow == exitRow;
+        } else if (primary.orientation == Orientation.VERTICAL) {
+            // Untuk mobil vertikal, cek apakah ujung atas mencapai exitRow
+            int backRow = primary.row - 1;
+            return primary.col == exitCol && backRow == exitRow;
+        }
+        
+        return false;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("State{");
