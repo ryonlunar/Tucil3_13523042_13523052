@@ -90,4 +90,17 @@ public class InputParser {
             throw new Exception("error parsing file", e);
         }
     }
+
+    public static void main(String[] args) {
+        try {
+            Result result = parse("app/test_input.txt");
+            System.out.println("Initial State:");
+            System.out.println(result.initState.toString());
+            System.out.println("Algorithm: " + result.algo);
+            System.out.println("Heuristic: " + result.heuristic);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
