@@ -5,9 +5,9 @@ import java.util.*;
 public class TestState {
     public static void main(String[] args) {
         // 1. Buat kendaraan (contoh 3 mobil)
-        Vehicle redCar = new Vehicle('X', 2, 0, 2, true); // mobil merah horizontal
-        Vehicle a = new Vehicle('A', 0, 0, 2, true);
-        Vehicle b = new Vehicle('B', 0, 2, 3, false);
+        Vehicle redCar = new Vehicle('X', 2, 0, Orientation.HORIZONTAL); // mobil merah horizontal
+        Vehicle a = new Vehicle('A', 0, 0, Orientation.HORIZONTAL);
+        Vehicle b = new Vehicle('B', 0, 2, Orientation.VERTICAL);
 
         // 2. Masukkan kendaraan ke map
         Map<Character, Vehicle> vehicles = new HashMap<>();
@@ -23,7 +23,7 @@ public class TestState {
 
         // 4. Tempatkan kendaraan di papan
         for (Vehicle v : vehicles.values()) {
-            if (v.isHorizontal) {
+            if (v.orientation == Orientation.HORIZONTAL) {
                 for (int i = 0; i < v.length; i++) {
                     board[v.row][v.col + i] = v.id;
                 }

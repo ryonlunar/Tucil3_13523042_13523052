@@ -78,7 +78,7 @@ public class State {
         for (char id : vehicles.keySet()) {
             Vehicle v = vehicles.get(id);
             Vehicle otherV = other.vehicles.get(id);
-            if (v.row != otherV.row || v.col != otherV.col || v.isHorizontal != otherV.isHorizontal) {
+            if (v.row != otherV.row || v.col != otherV.col || v.orientation != otherV.orientation) {
                 return false;
             }
         }

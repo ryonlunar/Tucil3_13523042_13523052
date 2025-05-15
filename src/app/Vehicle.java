@@ -4,17 +4,27 @@ public class Vehicle {
     public char id;
     public int row, col;
     public int length;
-    public boolean isHorizontal;
+    public Orientation orientation;
     public boolean isPrimary;
 
 
-    public Vehicle(char id, int row, int col, int length, boolean isHorizontal) {
+    public Vehicle(char id, int row, int col, Orientation Orientation) {
         this.id = id;
         this.row = row;
         this.col = col;
-        this.length = length;
-        this.isHorizontal = isHorizontal;
+        this.length = 1;
+        this.orientation = Orientation;
         this.isPrimary = (id == 'P');
+    }
+
+    public void increaseLength() {
+        this.length++;
+    }
+
+    // deep copy constructor
+    public Vehicle copy() {
+        Vehicle other = new Vehicle(this);
+        return other;
     }
 
     public Vehicle(Vehicle other) {
@@ -22,13 +32,8 @@ public class Vehicle {
         this.row = other.row;
         this.col = other.col;
         this.length = other.length;
-        this.isHorizontal = other.isHorizontal;
+        this.orientation = other.orientation;
         this.isPrimary = other.isPrimary;
-    }
-
-    // deep copy constructor
-    public Vehicle copy() {
-        return new Vehicle(this.id, this.row, this.col, this.length, this.isHorizontal);
     }
 
     @Override
@@ -38,7 +43,7 @@ public class Vehicle {
                 ",\n\trow=" + row +
                 ",\n\tcol=" + col +
                 ",\n\tlength=" + length +
-                ",\n\tisHorizontal=" + isHorizontal +
+                ",\n\tOrientation=" + orientation +
                 ",\n\tisPrimary=" + isPrimary +
                 "\n}";
     }
