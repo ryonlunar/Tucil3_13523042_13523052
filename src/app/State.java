@@ -102,7 +102,7 @@ public class State {
         // Cek orientasi primary vehicle
         if (primary.orientation == Orientation.HORIZONTAL) {
             // Untuk mobil horizontal, cek apakah ujung kanan mencapai exitCol
-            int frontCol = primary.col + primary.length - 1;
+            int frontCol = primary.col + primary.length;
             return primary.row == exitRow && frontCol == exitCol;
         } else if (primary.orientation == Orientation.HORIZONTAL) {
             // Untuk mobil horizontal, cek apakah ujung kiri mencapai exitCol
@@ -111,7 +111,7 @@ public class State {
         }
         else if (primary.orientation == Orientation.VERTICAL) {
             // Untuk mobil vertikal, cek apakah ujung bawah mencapai exitRow
-            int frontRow = primary.row + primary.length - 1;
+            int frontRow = primary.row + primary.length;
             return primary.col == exitCol && frontRow == exitRow;
         } else if (primary.orientation == Orientation.VERTICAL) {
             // Untuk mobil vertikal, cek apakah ujung atas mencapai exitRow

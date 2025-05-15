@@ -26,7 +26,7 @@ public class InputParser {
             }
 
             // Membuat papan dengan ukuran yang ditentukan
-            char[][] board = new char[rows][cols];
+            char[][] board = new char[rows+1][cols+1];
             for (int i = 0; i < rows && i < lines.size(); i++) {
                 line = lines.get(i);
                 for (int j = 0; j < cols && j < line.length(); j++) {
@@ -55,7 +55,7 @@ public class InputParser {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     char c = board[i][j];
-                    if (c == '.' || c == 'K')
+                    if (c == '.' || c == 'K' || c == ' ')
                         continue;
 
                     if (!vehicles.containsKey(c)) {
@@ -76,7 +76,7 @@ public class InputParser {
             if (vehicles.size() - 1 != pieceCount) {
                 throw new Exception("invalid piece count");
             }
-            
+
             State initState = new State(vehicles, rows, cols, board, null, null, 0);
             initState.exitRow = exitRow;
             initState.exitCol = exitCol;
@@ -105,9 +105,27 @@ public class InputParser {
         try {
             Result result = parse("app/test_input.txt");
             System.out.println("Initial State:");
-            System.out.println(result.initState.toString());
+            // System.out.println(result.initState.toString());
             System.out.println("Algorithm: " + result.algo);
             System.out.println("Heuristic: " + result.heuristic);
+            // if (result.algo.equals("UCS")) {
+            //     UCS ucs = new UCS(result.initState, result.heuristic);
+            //     ucs.search();
+            // } else if (result.algo.equals("GBFS")) {
+            //     GBFS gbfs = new GBFS(result.initState, result.heuristic);
+            //     gbfs.search();
+            // } else if (result.algo.equals("A*")) {
+            //     AStar astar = new AStar(result.initState, result.heuristic);
+            //     astar.search();
+            // }
+            if (result.initState.isGoal()){
+                System.out.println("Goal state found");
+                System.out.println(result.initState.toString());
+            }else{
+                // print posisi vehicle p dan posisi exit
+                System.out.println("Posisi Kendaraan P: " + result.initState.vehicles.get('P').row + "," + result.initState.vehicles.get('P').col);
+                System.out.println("Posisi Exit: " + result.initState.exitRow + "," + result.initState.exitCol);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
