@@ -19,17 +19,38 @@ public class InputParser {
 
             int pieceCount = Integer.parseInt(reader.readLine());
 
+            List<String> lines = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            // Membuat papan dengan ukuran yang ditentukan
             char[][] board = new char[rows][cols];
-            for (int i = 0; i < rows; i++) {
-                String line = reader.readLine();
-                for (int j = 0; j < cols; j++) {
+            for (int i = 0; i < rows && i < lines.size(); i++) {
+                line = lines.get(i);
+                for (int j = 0; j < cols && j < line.length(); j++) {
                     board[i][j] = line.charAt(j);
                 }
             }
 
+            // Membuat daftar kendaraan
             Map<Character, Vehicle> vehicles = new HashMap<>();
             int exitRow = -1, exitCol = -1;
 
+            // Mendeteksi posisi exit (K) di seluruh file termasuk di luar batas papan
+            for (int i = 0; i < lines.size(); i++) {
+                line = lines.get(i);
+                for (int j = 0; j < line.length(); j++) {
+                    if (line.charAt(j) == 'K') {
+                        exitRow = i;
+                        exitCol = j;
+                        break;
+                    }
+                }
+                if (exitRow != -1)
+                    break;
+            }
             // mendeteksi posisi semua kendaraan
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -52,27 +73,16 @@ public class InputParser {
                     }
                 }
             }
-            if (vehicles.size() != pieceCount) {
+            if (vehicles.size() - 1 != pieceCount) {
                 throw new Exception("invalid piece count");
             }
-
-            // mendeteksi posisi exit
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    if (board[i][j] == 'K') {
-                        exitRow = i;
-                        exitCol = j;
-                        break;
-                    }
-                }
-            }
-
+            
             State initState = new State(vehicles, rows, cols, board, null, null, 0);
             initState.exitRow = exitRow;
             initState.exitCol = exitCol;
 
             try (// baca algo dari stdin
-                Scanner scanner = new Scanner(System.in)) {
+                    Scanner scanner = new Scanner(System.in)) {
                 System.out.print("Masukkan algoritma (UCS / GBFS / A*): ");
                 String algorithm = scanner.nextLine().toUpperCase();
 
@@ -103,4 +113,3 @@ public class InputParser {
         }
     }
 }
-

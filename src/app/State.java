@@ -100,6 +100,8 @@ public class State {
         sb.append("parent=").append(parent).append("\n");
         sb.append("move=").append(move).append("\n");
         sb.append("cost=").append(cost).append("}");
+        sb.append("exitRow=").append(exitRow).append("\n");
+        sb.append("exitCol=").append(exitCol).append("\n");
         return sb.toString();
     }
 }
