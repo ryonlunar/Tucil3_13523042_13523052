@@ -11,17 +11,31 @@ public class State {
     public State parent; // untuk rekonstruksi path dari goal ke start
     public String move; // untuk rekonstruksi path dari goal ke start
     public int cost; // untuk UCS dan A*
+    public int exitRow, exitCol;
 
     public State(Map<Character, Vehicle> Vehicles, int tot_rows, int tot_cols, char[][] board, State parent, String move, int cost) {
-        this.vehicles = Vehicles;
+        this.vehicles = new HashMap<>();
+        for (Map.Entry<Character, Vehicle> entry : Vehicles.entrySet()) {
+            this.vehicles.put(entry.getKey(), new Vehicle(entry.getValue()));
+        }
         this.tot_rows = tot_rows;
         this.tot_cols = tot_cols;
-        this.board = board;
+        this.board = new char [tot_rows][tot_cols];
+        for (int i = 0; i < tot_rows; i++) {
+            for (int j = 0; j < tot_cols; j++) {
+                this.board[i][j] = board[i][j];
+            }
+        }
         this.parent = parent;
         this.move = move;
         this.cost = cost;
     }
 
+    public State(State other) {
+        this(other.vehicles,other.tot_rows, other.tot_cols, other.board, other.parent, other.move, other.cost);
+        this.exitRow = other.exitRow;
+        this.exitCol = other.exitCol;
+    }
     // deep copy constructor
     // biar gk shallow copy
     // jadi State yang lama gk ikut berubah
@@ -69,6 +83,24 @@ public class State {
             }
         }
         return true;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("State{");
+        sb.append("vehicles=").append(vehicles.toString()).append("\n");
+        sb.append("tot_rows=").append(tot_rows).append("\n");
+        sb.append("tot_cols=").append(tot_cols).append("\n");
+        sb.append("board=\n");
+        for (int i = 0; i < tot_rows; i++) {
+            for (int j = 0; j < tot_cols; j++) {
+                sb.append(String.format("%2c ", board[i][j]));
+            }
+            sb.append("\n");
+        }
+        sb.append("parent=").append(parent).append("\n");
+        sb.append("move=").append(move).append("\n");
+        sb.append("cost=").append(cost).append("}");
+        return sb.toString();
     }
 }
 

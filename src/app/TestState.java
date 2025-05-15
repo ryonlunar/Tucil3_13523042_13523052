@@ -39,24 +39,15 @@ public class TestState {
 
         // 6. Print papan
         System.out.println("Initial Board State:");
-        printBoard(state.board);
+        System.out.println(state.toString());
 
         // 7. Coba copy state dan cek perbedaan objek
         State copied = state.copy();
         System.out.println("\nCopied Board State:");
-        printBoard(copied.board);
+        System.out.println(copied.toString());
 
         // 8. Cek equals
         System.out.println("\nAre states equal? " + state.equals(copied));
         System.out.println("Are state objects the same? " + (state == copied)); // Harus false
-    }
-
-    public static void printBoard(char[][] board) {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                System.out.print(board[i][j] + " ");
-            }
-            System.out.println();
-        }
     }
 }
