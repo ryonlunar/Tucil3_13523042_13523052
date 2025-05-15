@@ -88,8 +88,9 @@ public class State {
     // Di dalam class State.java
 
     public boolean isGoal() {
+        System.out.println("TEST");
         // Cari kendaraan primary (P)
-        Vehicle primary = null;
+        Vehicle primary = null; 
         for (Vehicle v : vehicles.values()) {
             if (v.isPrimary) {
                 primary = v;
@@ -97,28 +98,42 @@ public class State {
             }
         }
         
-        if (primary == null) return false;
+        if (primary == null){
+            System.out.println("Tidak ada kendaraan primary");
+            return false;
+        }
 
         // Cek orientasi primary vehicle
-        if (primary.orientation == Orientation.HORIZONTAL) {
+        if (primary.orientation == Orientation.HORIZONTAL && exitCol == board.length) {
             // Untuk mobil horizontal, cek apakah ujung kanan mencapai exitCol
+            System.out.println("TEST1");
+            System.out.println("Primary Length: " + primary.length);
+            System.out.println("Primary Col: " + primary.col);
+            System.out.println("Primary Row: " + primary.row);
+            System.out.println("Exit Row: " + exitRow);
             int frontCol = primary.col + primary.length;
+            System.out.println("Front Col: " + frontCol);
+            System.out.println("Exit Col: " + exitCol);
+            System.out.println(frontCol == exitCol);
             return primary.row == exitRow && frontCol == exitCol;
-        } else if (primary.orientation == Orientation.HORIZONTAL) {
+        } else if (primary.orientation == Orientation.HORIZONTAL && exitCol == -1) {
             // Untuk mobil horizontal, cek apakah ujung kiri mencapai exitCol
             int backCol = primary.col - 1;
+            System.out.println("TEST2");
             return primary.row == exitRow && backCol == exitCol;
         }
-        else if (primary.orientation == Orientation.VERTICAL) {
+        else if (primary.orientation == Orientation.VERTICAL && exitRow == board.length) {
             // Untuk mobil vertikal, cek apakah ujung bawah mencapai exitRow
+            System.out.println("TEST3");
             int frontRow = primary.row + primary.length;
             return primary.col == exitCol && frontRow == exitRow;
-        } else if (primary.orientation == Orientation.VERTICAL) {
+        } else if (primary.orientation == Orientation.VERTICAL && exitRow == -1) {
             // Untuk mobil vertikal, cek apakah ujung atas mencapai exitRow
+            System.out.println("TEST4");
             int backRow = primary.row - 1;
             return primary.col == exitCol && backRow == exitRow;
         }
-        
+        System.out.println("TEST");
         return false;
     }
 

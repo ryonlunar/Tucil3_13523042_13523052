@@ -26,12 +26,50 @@ public class InputParser {
             }
 
             // Membuat papan dengan ukuran yang ditentukan
-            char[][] board = new char[rows+1][cols+1];
-            for (int i = 0; i < rows && i < lines.size(); i++) {
+            char[][] board = new char[rows][cols];
+            // print lines.size()
+            System.out.println("lines size: " + lines.size());
+            // print lines.get(0).length()
+            System.out.println("lines.get(0).length(): " + lines.get(0).length());
+            for (int i = 0; i < lines.size(); i++) {
                 line = lines.get(i);
-                for (int j = 0; j < cols && j < line.length(); j++) {
-                    board[i][j] = line.charAt(j);
+
+                if (line.charAt(0) == ' ' && line.charAt(1) == ' '
+                        || line.charAt(0) == 'K' && line.charAt(1) == ' '
+                        || line.charAt(0) == ' ' && line.charAt(1) == 'K') {
+                    // artinya ini baris atas yg isinya Pintu keluar
+                    // brrti kita harus pindahin yg indeks row ke 1 ke sini
+                    if (i > rows - 1) {
+                        break;
+                    }
+                    System.out.println("i: " + i);
+                    i++;
+                    line = lines.get(i);
                 }
+                for (int j = 0;j < lines.get(0).length(); j++) {
+                    if (line.charAt(0) == ' ' || line.charAt(0) == 'K') {
+                        // artinya ini kolom kiri yg isinya Pintu keluar
+                        if (j > cols - 1) {
+                            break;
+                        }
+                        board[i][j] = line.charAt(j+1);
+                    }
+                    else {
+                        if (j > cols - 1) {
+                            break;
+                        }
+                        board[i][j] = line.charAt(j);
+                    }
+                    System.out.println("i: " + i + " j: " + j);
+                    // print board:
+                    for (int k = 0; k < rows; k++) {
+                        for (int l = 0; l < cols; l++) {
+                            System.out.print(board[k][l] + " ");
+                        }
+                        System.out.println();
+                    }
+                }
+                // print i sama j
             }
 
             // Membuat daftar kendaraan
@@ -45,7 +83,14 @@ public class InputParser {
                     if (line.charAt(j) == 'K') {
                         exitRow = i;
                         exitCol = j;
-                        break;
+                        if (exitRow == 0 && exitCol != rows){
+                            exitRow = -1;
+                            break;
+                        }
+                        if (exitCol == 0 && exitRow != cols){
+                            exitCol = -1;
+                            break;
+                        }
                     }
                 }
                 if (exitRow != -1)
@@ -72,6 +117,13 @@ public class InputParser {
                         vehicles.get(c).increaseLength();
                     }
                 }
+            }
+            // print board
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    System.out.print(board[i][j]);
+                }
+                System.out.println();
             }
             if (vehicles.size() - 1 != pieceCount) {
                 throw new Exception("invalid piece count");
