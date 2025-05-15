@@ -26,10 +26,10 @@ public class InputParser {
             }
 
             // Membuat papan dengan ukuran yang ditentukan
-            char[][] board = new char[rows+1][cols+1];
-            for (int i = 0; i < rows && i < lines.size(); i++) {
+            char[][] board = new char[lines.size()][lines.get(0).length()];
+            for (int i = 0; i < lines.size(); i++) {
                 line = lines.get(i);
-                for (int j = 0; j < cols && j < line.length(); j++) {
+                for (int j = 0; j < line.length(); j++) {
                     board[i][j] = line.charAt(j);
                 }
             }
@@ -74,6 +74,10 @@ public class InputParser {
                 }
             }
             if (vehicles.size() - 1 != pieceCount) {
+                // print vehicles.size() - 1
+                System.out.println("vehicles.size() - 1 = " + (vehicles.size() - 1));
+                System.out.println("pieceCount = " + pieceCount);   
+                // print pieceCount
                 throw new Exception("invalid piece count");
             }
 
@@ -118,7 +122,7 @@ public class InputParser {
             //     AStar astar = new AStar(result.initState, result.heuristic);
             //     astar.search();
             // }
-            if (result.initState.isGoal()){
+            if (result.initState.isGoal(result.initState.vehicles.get('P'))) {
                 System.out.println("Goal state found");
                 System.out.println(result.initState.toString());
             }else{

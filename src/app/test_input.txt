@@ -1,8 +1,9 @@
 6 6
 11
- AAB..F
- ..BCDF
- G.BCDF
- GH.III
- GHJ.L.
-KPPJML.
+     K
+AAB.EP
+..BCFP
+G.BCD.
+G..I..
+HJ.L..
+HJML..

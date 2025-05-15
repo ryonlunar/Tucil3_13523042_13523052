@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class State {
     public Map<Character, Vehicle> vehicles; // map of Vehicle
+    public Vehicle primary;
     public int tot_rows;
     public int tot_cols;
     public char[][] board;
@@ -16,6 +17,9 @@ public class State {
     public State(Map<Character, Vehicle> Vehicles, int tot_rows, int tot_cols, char[][] board, State parent, String move, int cost) {
         this.vehicles = new HashMap<>();
         for (Map.Entry<Character, Vehicle> entry : Vehicles.entrySet()) {
+            if (entry.getValue().isPrimary) {
+                this.primary = new Vehicle(entry.getValue());
+            }
             this.vehicles.put(entry.getKey(), new Vehicle(entry.getValue()));
         }
         this.tot_rows = tot_rows;
@@ -33,6 +37,7 @@ public class State {
 
     public State(State other) {
         this(other.vehicles,other.tot_rows, other.tot_cols, other.board, other.parent, other.move, other.cost);
+        this.primary = other.primary;
         this.exitRow = other.exitRow;
         this.exitCol = other.exitCol;
     }
@@ -87,33 +92,24 @@ public class State {
 
     // Di dalam class State.java
 
-    public boolean isGoal() {
-        // Cari kendaraan primary (P)
-        Vehicle primary = null;
-        for (Vehicle v : vehicles.values()) {
-            if (v.isPrimary) {
-                primary = v;
-                break;
-            }
-        }
-        
+    public boolean isGoal(Vehicle primary) {
         if (primary == null) return false;
 
         // Cek orientasi primary vehicle
-        if (primary.orientation == Orientation.HORIZONTAL) {
+        if (primary.orientation == Orientation.HORIZONTAL && exitCol == board.length) {
             // Untuk mobil horizontal, cek apakah ujung kanan mencapai exitCol
             int frontCol = primary.col + primary.length;
             return primary.row == exitRow && frontCol == exitCol;
-        } else if (primary.orientation == Orientation.HORIZONTAL) {
+        } else if (primary.orientation == Orientation.HORIZONTAL && exitCol == 0) {
             // Untuk mobil horizontal, cek apakah ujung kiri mencapai exitCol
             int backCol = primary.col - 1;
             return primary.row == exitRow && backCol == exitCol;
         }
-        else if (primary.orientation == Orientation.VERTICAL) {
+        else if (primary.orientation == Orientation.VERTICAL  && exitRow == board.length) {
             // Untuk mobil vertikal, cek apakah ujung bawah mencapai exitRow
             int frontRow = primary.row + primary.length;
             return primary.col == exitCol && frontRow == exitRow;
-        } else if (primary.orientation == Orientation.VERTICAL) {
+        } else if (primary.orientation == Orientation.VERTICAL && exitRow == 0) {
             // Untuk mobil vertikal, cek apakah ujung atas mencapai exitRow
             int backRow = primary.row - 1;
             return primary.col == exitCol && backRow == exitRow;
@@ -141,6 +137,39 @@ public class State {
         sb.append("exitRow=").append(exitRow).append("\n");
         sb.append("exitCol=").append(exitCol).append("\n");
         return sb.toString();
+    }
+
+    // tambahkan validasi bahwa mobil tidak bisa mundur ke tempat yang ada spasi atau yang ada "K"
+    // tambahkan validasi juga bahwa tidak akan nabrak ke mobil sampingnya
+    
+    public boolean isValidMove(Vehicle vehicle, int row, int col) {
+        if (board[row][col] == ' ' || board[row][col] == 'K') {
+            return false;
+        }
+        
+        if (vehicle.orientation == Orientation.HORIZONTAL) {
+            if ((col > 0 && board[row][col - 1] != '.' && board[row][col - 1] != vehicle.id) ||
+                (col < tot_cols - 1 && board[row][col + 1] != '.' && board[row][col + 1] != vehicle.id)) {
+                return false;
+            }
+        } else if (vehicle.orientation == Orientation.VERTICAL) {
+            if ((row > 0 && board[row - 1][col] != '.' && board[row - 1][col] != vehicle.id) ||
+                (row < tot_rows - 1 && board[row + 1][col] != '.' && board[row + 1][col] != vehicle.id)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    // tambahkan logika move mobil
+    public void moveVehicle(Vehicle vehicle, int row, int col) {
+        if (isValidMove(vehicle, row, col)) {
+            board[vehicle.row][vehicle.col] = '.';
+            vehicle.row = row;
+            vehicle.col = col;
+            board[vehicle.row][vehicle.col] = vehicle.id;
+        }
     }
 }
 
