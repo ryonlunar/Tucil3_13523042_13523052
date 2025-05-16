@@ -1,11 +1,11 @@
-package app;
+package main.java;
 
 public class Main {
     public static void main(String[] args) {
         try {
 
             // Parse input file
-            InputParser.Result result = InputParser.parse("../test/in/t1.txt");
+            InputParser.Result result = InputParser.parse("test/in/t1.txt");
 
             long startTime = System.currentTimeMillis();
 
