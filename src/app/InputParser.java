@@ -128,7 +128,7 @@ public class InputParser {
 
     public static void main(String[] args) {
         try {
-            Result result = parse("app/t3.txt");
+            Result result = parse("app/t4.txt");
             System.out.println("Initial State:");
             // System.out.println(result.initState.toString());
             System.out.println("Algorithm: " + result.algo);

@@ -307,36 +307,4 @@ public class State {
         }
 
     }
-    // private void tryMoveVertical(Vehicle vehicle, List<State> successors, int
-    // direction) {
-    // // Untuk kendaraan vertikal, periksa apakah bisa bergerak ke atas/bawah
-    // int newRow = vehicle.row + direction;
-    // if (direction < 0){
-    // if (newRow < 0) return;
-    // for (int i = 0; i < vehicle.length; i++){
-    // if (board[newRow + i][vehicle.col] != '.' && board[newRow + i][vehicle.col]
-    // != vehicle.id) return;
-    // }
-    // } else{
-    // newRow = vehicle.row + direction;
-    // if (newRow >= tot_rows) return;
-    // if (board[newRow][vehicle.col] != '.') return;
-    // }
-
-    // // Buat state baru dengan kendaraan yang sudah digeser
-    // State newState = this.copy();
-    // Vehicle moved = newState.vehicles.get(vehicle.id);
-    // moved.row = direction < 0 ? newRow : vehicle.row + 1;
-
-    // // Update board
-    // if (direction < 0){
-    // newState.board[vehicle.row = 1][vehicle.col] = vehicle.id;
-    // newState.board[vehicle.row + vehicle.length - 1][vehicle.col] = '.';
-    // }else{
-    // newState.board[vehicle.row + vehicle.length][vehicle.col] = vehicle.id;
-    // newState.board[vehicle.row][vehicle.col] = '.';
-    // }
-
-    // successors.add(newState);
-    // }
 }
