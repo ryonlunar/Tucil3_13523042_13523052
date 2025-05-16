@@ -40,7 +40,7 @@ public class Controller {
     @FXML
     private RadioButton ucsRadio, gbfsRadio, astarRadio;
     @FXML
-    private RadioButton manhattanRadio, euclideanRadio;
+    private RadioButton manhattanRadio, blockedRadio;
     @FXML
     private HBox heuristicBox;
     @FXML
@@ -101,7 +101,7 @@ public class Controller {
                 // Parse input file
                 InputParser.Result result = InputParser.parse(filePath,
                         ucsRadio.isSelected() ? "UCS" : astarRadio.isSelected() ? "A*" : "GBFS",
-                        euclideanRadio.isSelected() ? "EUCLIDEAN" : "MANHATTAN");
+                        blockedRadio.isSelected() ? "BLOCKED" : "BLOCKED");
 
                 appendOutput("Running " + result.algo + " algorithm...");
 
@@ -118,7 +118,11 @@ public class Controller {
                         visitedNodesCount = ucs.getVisitedNodesCount();
                         break;
                     case "GBFS":
-                        appendOutput("GBFS algorithm not implemented yet.");
+                        result.initState.methode = result.heuristic;
+                        GBFS gbfs = new GBFS(result.initState);
+                        gbfs.search();
+                        goalState = gbfs.getGoalState();
+                        visitedNodesCount = gbfs.getVisitedNodesCount();
                         break;
                     case "A*":
                         AStar astar = new AStar(result.initState, result.heuristic);
@@ -369,7 +373,7 @@ public class Controller {
         gbfsRadio.setSelected(false);
         astarRadio.setSelected(false);
         manhattanRadio.setSelected(true);
-        euclideanRadio.setSelected(false);
+        blockedRadio.setSelected(false);
 
         // Reset status tombol
         pauseButton.setText("Pause");

@@ -122,7 +122,7 @@ public class InputParser {
 
     public static void main(String[] args) {
         try {
-            Result result = parse("app/t4.txt", "UCS", "EUCLIDEAN");
+            Result result = parse("app/t4.txt", "UCS", "MANHATTAN");
             System.out.println("Initial State:");
             // System.out.println(result.initState.toString());
             System.out.println("Algorithm: " + result.algo);
