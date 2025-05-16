@@ -3,10 +3,10 @@ package app;
 public class Main {
     public static void main(String[] args) {
         try {
-            
+
             // Parse input file
             InputParser.Result result = InputParser.parse("../test/in/t1.txt");
-            
+
             long startTime = System.currentTimeMillis();
 
             State goalState = null;
@@ -23,9 +23,12 @@ public class Main {
                     // Placeholder for future implementation
                     System.out.println("GBFS algorithm not implemented yet.");
                     break;
+                // Main.java (perubahan di switch case)
                 case "A*":
-                    // Placeholder for future implementation
-                    System.out.println("A* algorithm not implemented yet.");
+                    AStar astar = new AStar(result.initState, result.heuristic);
+                    astar.search();
+                    goalState = astar.getGoalState();
+                    visitedNodesCount = astar.getVisitedNodesCount();
                     break;
                 default:
                     System.out.println("Unknown algorithm: " + result.algo);
@@ -33,10 +36,10 @@ public class Main {
 
             long endTime = System.currentTimeMillis();
 
-            if (goalState != null){
+            if (goalState != null) {
                 System.out.println("Goal state found!");
                 OutputHandler.printSolutionPath(goalState, startTime, endTime, visitedNodesCount);
-            }else{
+            } else {
                 System.out.println("no solusi ditemukan");
             }
         } catch (Exception e) {
