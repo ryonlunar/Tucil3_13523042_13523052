@@ -4,6 +4,6 @@ AAB..F
 .PBCDF
 GP.CDF
 G..III
-GHH..L
+GHH.LL
 ..JJMM
  K    

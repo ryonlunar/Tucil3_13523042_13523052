@@ -61,33 +61,27 @@ public class State {
      * Agar kita tidak mengunjungi ulang State yang sama, kita harus menyimpan semua
      * State yang pernah dikunjungi dalam Set.
      */
+
     @Override
     public int hashCode() {
-        StringBuilder sb = new StringBuilder();
-        for (Vehicle v : vehicles.values()) {
-            sb.append(v.id).append(v.row).append(v.col).append(v.orientation);
-        }
-        // int hash = sb.toString().hashCode();
-        // System.out.println("DEBUG hashCode: " + hash);
-        return sb.toString().hashCode();
+        return vehicles.values().stream()
+                .mapToInt(v -> Objects.hash(v.id, v.row, v.col, v.orientation))
+                .sum();
     }
 
-    // buat cek duplikat
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof State)) {
+        if (!(obj instanceof State))
             return false;
-        }
         State other = (State) obj;
-        for (char id : vehicles.keySet()) {
-            Vehicle v = vehicles.get(id);
-            Vehicle otherV = other.vehicles.get(id);
-            if (v.row != otherV.row || v.col != otherV.col || v.orientation != otherV.orientation) {
-                return false;
-            }
-        }    
-        // System.out.println("DEBUG equals: States are equal");
-        return true;
+        return vehicles.entrySet().stream()
+                .allMatch(e -> {
+                    Vehicle ov = other.vehicles.get(e.getKey());
+                    return ov != null &&
+                            e.getValue().row == ov.row &&
+                            e.getValue().col == ov.col &&
+                            e.getValue().orientation == ov.orientation;
+                });
     }
 
     // Di dalam class State.java
@@ -102,6 +96,11 @@ public class State {
         Orientation or = primary.orientation;
         System.out.println("DEBUG isGoal: Checking primary at (" + pr + "," + pc + ") len=" + len +
                 " orientation=" + or + " against exit at (" + exitRow + "," + exitCol + ")");
+        if (primary.orientation == Orientation.VERTICAL &&
+                primary.col == exitCol &&
+                primary.row + primary.length == exitRow) {
+            return true;
+        }
         // Cek orientasi primary vehicle
         if (or == Orientation.HORIZONTAL && exitCol == boardLen) {
             int frontCol = pc + len;
@@ -256,7 +255,6 @@ public class State {
     private void tryMoveVertical(Vehicle vehicle, List<State> successors, int direction) {
         // Untuk kendaraan vertikal, periksa apakah bisa bergerak ke atas/bawah
         int newRow;
-
         if (direction < 0) {
             // Bergerak ke atas
             newRow = vehicle.row - 1;
@@ -309,4 +307,36 @@ public class State {
         }
 
     }
+    // private void tryMoveVertical(Vehicle vehicle, List<State> successors, int
+    // direction) {
+    // // Untuk kendaraan vertikal, periksa apakah bisa bergerak ke atas/bawah
+    // int newRow = vehicle.row + direction;
+    // if (direction < 0){
+    // if (newRow < 0) return;
+    // for (int i = 0; i < vehicle.length; i++){
+    // if (board[newRow + i][vehicle.col] != '.' && board[newRow + i][vehicle.col]
+    // != vehicle.id) return;
+    // }
+    // } else{
+    // newRow = vehicle.row + direction;
+    // if (newRow >= tot_rows) return;
+    // if (board[newRow][vehicle.col] != '.') return;
+    // }
+
+    // // Buat state baru dengan kendaraan yang sudah digeser
+    // State newState = this.copy();
+    // Vehicle moved = newState.vehicles.get(vehicle.id);
+    // moved.row = direction < 0 ? newRow : vehicle.row + 1;
+
+    // // Update board
+    // if (direction < 0){
+    // newState.board[vehicle.row = 1][vehicle.col] = vehicle.id;
+    // newState.board[vehicle.row + vehicle.length - 1][vehicle.col] = '.';
+    // }else{
+    // newState.board[vehicle.row + vehicle.length][vehicle.col] = vehicle.id;
+    // newState.board[vehicle.row][vehicle.col] = '.';
+    // }
+
+    // successors.add(newState);
+    // }
 }
