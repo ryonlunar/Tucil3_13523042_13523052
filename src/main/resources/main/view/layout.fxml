@@ -3,16 +3,52 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="main.Controller"
-            prefWidth="400" prefHeight="200">
+            prefWidth="800" prefHeight="800">
     
     <children>
-        <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
-            <TextField fx:id="inputField" promptText="Enter your name" />
-            <Button text="Show Message" fx:id="showButton" onAction="#showText"/>
-            <Label fx:id="outputLabel" text="Your message will appear here."/>
+        <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Input File:" />
+                <TextField fx:id="filePathField" promptText="Choose input file" HBox.hgrow="ALWAYS" />
+                <Button text="Browse" fx:id="browseButton" onAction="#browseFile"/>
+            </HBox>
+
+            <!-- Algorithm selection section -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Algorithm:" />
+                <RadioButton fx:id="ucsRadio" text="UCS" selected="true">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="algoGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="gbfsRadio" text="GBFS" toggleGroup="$algoGroup" />
+                <RadioButton fx:id="astarRadio" text="A*" toggleGroup="$algoGroup" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT" fx:id="heuristicBox" visible="false">
+                <Label text="Heuristic:" />
+                <RadioButton fx:id="manhattanRadio" text="Manhattan" selected="true">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="heuristicGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="euclideanRadio" text="Euclidean" toggleGroup="$heuristicGroup" />
+            </HBox>
+
+            <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
+            <!-- Animation section -->
+            <Label text="Solution Visualization:" />
+            <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
+            <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
+            <Button text="New Test Case" onAction="#handleNewTestCase"/>
+            <TextArea fx:id="outputArea" editable="false" wrapText="true" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+            <!-- Di layout.fxml tambahkan tombol: -->
+
         </VBox>
     </children>
 </AnchorPane>
+
