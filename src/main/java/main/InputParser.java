@@ -11,7 +11,7 @@ public class InputParser {
         public String heuristic;
     }
 
-    public static Result parse(String filename) throws Exception {
+    public static Result parse(String filename, String algorithm, String heuristic) throws Exception {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String[] dim = reader.readLine().split(" ");
             int rows = Integer.parseInt(dim[0]);
@@ -94,33 +94,27 @@ public class InputParser {
             State initState = new State(vehicles, lines.size(), lines.get(0).length(), board, null, null, 0);
             initState.exitRow = exitRow;
             initState.exitCol = exitCol;
+
+            Result result = new Result();
+            result.initState = initState;
+            result.algo = algorithm;
+            result.heuristic = heuristic;
             // print letak primary vehicle
             System.out.println("Posisi Kendaraan P: " + vehicles.get('P').row + "," + vehicles.get('P').col);
             // print letak exit
             System.out.println("Posisi Exit: " + exitRow + "," + exitCol);
-            try (// baca algo dari stdin
-                    Scanner scanner = new Scanner(System.in)) {
-                System.out.print("Masukkan algoritma (UCS / GBFS / A*): ");
-                String algorithm = scanner.nextLine().toUpperCase();
+            result.initState = initState;
+            result.algo = algorithm;
+            result.heuristic = heuristic;
+            System.out.println("DEBUG Parser: Posisi exit terdeteksi: (" + exitRow + "," + exitCol + ")");
 
-                // baca heuristik dari stdin
-                System.out.print("Masukkan heuristik (Manhattan / Blocked): ");
-                String heuristic = scanner.nextLine().toUpperCase();
-
-                Result result = new Result();
-                result.initState = initState;
-                result.algo = algorithm;
-                result.heuristic = heuristic;
-                System.out.println("DEBUG Parser: Posisi exit terdeteksi: (" + exitRow + "," + exitCol + ")");
-
-                // Setelah mendeteksi kendaraan
-                System.out.println("DEBUG Parser: Jumlah kendaraan: " + (vehicles.size() - 1));
-                System.out.println("DEBUG Parser: Primary vehicle position: (" +
-                        vehicles.get('P').row + "," + vehicles.get('P').col +
-                        "), orientation: " + vehicles.get('P').orientation +
-                        ", length: " + vehicles.get('P').length);
-                return result;
-            }
+            // Setelah mendeteksi kendaraan
+            System.out.println("DEBUG Parser: Jumlah kendaraan: " + (vehicles.size() - 1));
+            System.out.println("DEBUG Parser: Primary vehicle position: (" +
+                    vehicles.get('P').row + "," + vehicles.get('P').col +
+                    "), orientation: " + vehicles.get('P').orientation +
+                    ", length: " + vehicles.get('P').length);
+            return result;
         } catch (Exception e) {
             throw new Exception("error parsing file", e);
         }
@@ -128,7 +122,7 @@ public class InputParser {
 
     public static void main(String[] args) {
         try {
-            Result result = parse("app/t4.txt");
+            Result result = parse("app/t4.txt", "UCS", "EUCLIDEAN");
             System.out.println("Initial State:");
             // System.out.println(result.initState.toString());
             System.out.println("Algorithm: " + result.algo);
