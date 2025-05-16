@@ -1,4 +1,4 @@
-package app;
+package main;
 
 public class Vehicle {
     public char id;
