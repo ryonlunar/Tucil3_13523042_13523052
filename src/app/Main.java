@@ -6,6 +6,7 @@ public class Main {
             
             // Parse input file
             InputParser.Result result = InputParser.parse("../test/in/t1.txt");
+            result.initState.setMethode(result.heuristic);
             
             long startTime = System.currentTimeMillis();
 
@@ -21,7 +22,10 @@ public class Main {
                     break;
                 case "GBFS":
                     // Placeholder for future implementation
-                    System.out.println("GBFS algorithm not implemented yet.");
+                    GBFS gbfs = new GBFS(result.initState);
+                    gbfs.search();
+                    goalState = gbfs.getGoalState();
+                    visitedNodesCount = gbfs.getVisitedNodesCount();
                     break;
                 case "A*":
                     // Placeholder for future implementation

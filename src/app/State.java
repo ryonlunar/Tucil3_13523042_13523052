@@ -11,6 +11,8 @@ public class State {
     public String move; // untuk rekonstruksi path dari goal ke start
     public int cost; // untuk UCS dan A*
     public int exitRow, exitCol;
+    public int heuristicCost;
+    public String methode;
 
     public State(Map<Character, Vehicle> Vehicles, int tot_rows, int tot_cols, char[][] board, State parent,
             String move, int cost) {
@@ -37,6 +39,10 @@ public class State {
         this.exitCol = other.exitCol;
     }
 
+    public void setMethode(String methode) {
+        this.methode = methode;
+    }
+
     // deep copy constructor
     // biar gk shallow copy
     // jadi State yang lama gk ikut berubah
@@ -54,6 +60,9 @@ public class State {
         // copy exit coordinates
         newState.exitRow = this.exitRow;
         newState.exitCol = this.exitCol;
+        newState.heuristicCost = this.heuristicCost;
+        newState.methode = this.methode;
+
         return newState;
     }
 
@@ -94,8 +103,8 @@ public class State {
         int len = primary.length;
         int boardLen = board.length;
         Orientation or = primary.orientation;
-        System.out.println("DEBUG isGoal: Checking primary at (" + pr + "," + pc + ") len=" + len +
-                " orientation=" + or + " against exit at (" + exitRow + "," + exitCol + ")");
+        // System.out.println("DEBUG isGoal: Checking primary at (" + pr + "," + pc + ") len=" + len +
+        //         " orientation=" + or + " against exit at (" + exitRow + "," + exitCol + ")");
         if (primary.orientation == Orientation.VERTICAL &&
                 primary.col == exitCol &&
                 primary.row + primary.length == exitRow) {
@@ -104,30 +113,30 @@ public class State {
         // Cek orientasi primary vehicle
         if (or == Orientation.HORIZONTAL && exitCol == boardLen) {
             int frontCol = pc + len;
-            System.out.println(
-                    "DEBUG isGoal: Case 1 - Horizontal right edge, result: " + (pr == exitRow && frontCol == exitCol));
+            // System.out.println(
+            //         "DEBUG isGoal: Case 1 - Horizontal right edge, result: " + (pr == exitRow && frontCol == exitCol));
             return pr == exitRow && frontCol == exitCol;
         } else if (or == Orientation.HORIZONTAL && exitCol == 0) {
             int backCol = pc - 1;
-            System.out.println(
-                    "DEBUG isGoal: Case 2 - Horizontal left edge, result: " + (pr == exitRow && backCol == exitCol));
+            // System.out.println(
+            //         "DEBUG isGoal: Case 2 - Horizontal left edge, result: " + (pr == exitRow && backCol == exitCol));
             return pr == exitRow && backCol == exitCol;
         } else if (or == Orientation.VERTICAL && exitRow == boardLen) {
             int frontRow = pr + len;
-            System.out.println(
-                    "DEBUG isGoal: Case 3 - Vertical bottom edge, result: " + (pc == exitCol && frontRow == exitRow));
+            // System.out.println(
+            //         "DEBUG isGoal: Case 3 - Vertical bottom edge, result: " + (pc == exitCol && frontRow == exitRow));
             return pc == exitCol && frontRow == exitRow;
         } else if (or == Orientation.VERTICAL && exitRow == 0) {
             int backRow = pr - 1;
-            System.out.println(
-                    "DEBUG isGoal: Case 4 - Vertical top edge, result: " + (pc == exitCol && backRow == exitRow));
+            // System.out.println(
+            //         "DEBUG isGoal: Case 4 - Vertical top edge, result: " + (pc == exitCol && backRow == exitRow));
             return pc == exitCol && backRow == exitRow;
         }
 
-        System.out.println(
-                "DEBUG isGoal: PERHATIAN - Exit tidak pada tepi papan! exitRow=" + exitRow + ", exitCol=" + exitCol);
-        // print posisi vehicle H
-        System.out.println("Posisi Kendaraan H: " + vehicles.get('H').row + "," + vehicles.get('H').col);
+        // System.out.println(
+        //         "DEBUG isGoal: PERHATIAN - Exit tidak pada tepi papan! exitRow=" + exitRow + ", exitCol=" + exitCol);
+        // // print posisi vehicle H
+        // System.out.println("Posisi Kendaraan H: " + vehicles.get('H').row + "," + vehicles.get('H').col);
         return false;
     }
 
@@ -201,12 +210,13 @@ public class State {
             }
 
             if (succ.isEmpty()) {
-                System.out.println("DEBUG generateSucc: PERHATIAN - Tidak ada successor yang dihasilkan!");
+                // System.out.println("DEBUG generateSucc: PERHATIAN - Tidak ada successor yang dihasilkan!");
             }
 
         }
         return succ;
     }
+
 
     private void tryMoveHorizontal(Vehicle vehicle, List<State> successors, int direction) {
         int newCol;
@@ -227,6 +237,7 @@ public class State {
                     newState.parent = this;
                     newState.move = String.valueOf(vehicle.id) + " left";
                     newState.cost = this.cost + 1;
+                    newState.heuristicCost = getHeuristicCost(this.methode);
 
                     successors.add(newState);
                 }
@@ -245,6 +256,7 @@ public class State {
                 newState.parent = this;
                 newState.move = String.valueOf(vehicle.id) + " right";
                 newState.cost = this.cost + 1;
+                newState.heuristicCost = getHeuristicCost(this.methode);
 
                 successors.add(newState);
             }
@@ -279,6 +291,8 @@ public class State {
                     newState.move = String.valueOf(vehicle.id) + " up";
                     newState.cost = this.cost + 1;
 
+                    newState.heuristicCost = getHeuristicCost(this.methode);
+
                     successors.add(newState);
                 }
             }
@@ -301,10 +315,106 @@ public class State {
                 newState.parent = this;
                 newState.move = String.valueOf(vehicle.id) + " down";
                 newState.cost = this.cost + 1;
+                newState.heuristicCost = getHeuristicCost(this.methode);
 
                 successors.add(newState);
             }
         }
-
     }
+    private int getHeuristicCost(String methode) {
+        // System.out.println("DEBUG getHeuristicCost: metode heuristik = " + methode);
+        methode = methode.toLowerCase();
+        if (methode.equals("manhattan")) {
+            return this.getManhattanDistance();
+        } else if (methode.equals("blocked")) {
+            return this.getBlockedVehicles();
+        } else {
+            // System.out.println("DEBUG getHeuristicCost: PERHATIAN - Metode heuristik tidak valid!");
+            return -1;
+        }
+    }
+
+    private int getManhattanDistance() {
+        Vehicle primary = vehicles.get('P');
+        if (primary == null) return -1;
+
+        int pr = primary.row;
+        int pc = primary.col;
+        int len = primary.length;
+        Orientation or = primary.orientation;
+
+        if (or == Orientation.HORIZONTAL) {
+            int pEndCol = pc + len - 1;
+            return Math.abs(exitRow - pr) + Math.abs(exitCol - pEndCol);
+        } else {
+            int pEndRow = pr + len - 1;
+            return Math.abs(exitRow - pEndRow) + Math.abs(exitCol - pc);
+        }
+    }
+
+
+    private int getBlockedVehicles() {
+    Set<Character> blockedVehicles = new HashSet<>();
+
+    Vehicle player = vehicles.get('P');
+    if (player == null) return 0;
+
+    // Tidak ada pintu keluar (K)
+    if (exitRow == -1 || exitCol == -1) return 0;
+
+    int pr = player.row;
+    int pc = player.col;
+    int len = player.length;
+
+    if (player.orientation == Orientation.HORIZONTAL) {
+        if (pr != exitRow) return 0; // Harus di baris yang sama
+
+        int pStart = pc;
+        int pEnd = pc + len - 1;
+
+        if (exitCol < pStart) {
+            // Cek ke kiri
+            for (int c = exitCol; c < pStart; c++) {
+                char ch = board[pr][c];
+                if (ch != '.' && ch != 'P' && ch != 'K') {
+                    blockedVehicles.add(ch);
+                }
+            }
+        } else if (exitCol > pEnd) {
+            // Cek ke kanan
+            for (int c = pEnd + 1; c <= exitCol; c++) {
+                char ch = board[pr][c];
+                if (ch != '.' && ch != 'P' && ch != 'K') {
+                    blockedVehicles.add(ch);
+                }
+            }
+        }
+
+    } else if (player.orientation == Orientation.VERTICAL) {
+        if (pc != exitCol) return 0; // Harus di kolom yang sama
+
+        int pStart = pr;
+        int pEnd = pr + len - 1;
+
+        if (exitRow < pStart) {
+            // Cek ke atas
+            for (int r = exitRow; r < pStart; r++) {
+                char ch = board[r][pc];
+                if (ch != '.' && ch != 'P' && ch != 'K') {
+                    blockedVehicles.add(ch);
+                }
+            }
+        } else if (exitRow > pEnd) {
+            // Cek ke bawah
+            for (int r = pEnd + 1; r <= exitRow; r++) {
+                char ch = board[r][pc];
+                if (ch != '.' && ch != 'P' && ch != 'K') {
+                    blockedVehicles.add(ch);
+                }
+            }
+        }
+    }
+    return blockedVehicles.size();
+}
+
 }

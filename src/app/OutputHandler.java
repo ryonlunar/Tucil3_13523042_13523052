@@ -20,7 +20,7 @@ public class OutputHandler {
         }
         Collections.reverse(path);
         for (State state : path) {
-            out.println(state);
+            // out.println(state);
         }
         out.println("Banyaknya node yang dikunjungi: " + visitedNodesCount);
         out.printf("Waktu eksekusi: %.4f detik\n\n", (endTime - startTime) / 1000.0);

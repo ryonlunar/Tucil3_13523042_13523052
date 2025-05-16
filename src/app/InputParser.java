@@ -104,7 +104,7 @@ public class InputParser {
                 String algorithm = scanner.nextLine().toUpperCase();
 
                 // baca heuristik dari stdin
-                System.out.print("Masukkan heuristik (Manhattan / Euclidean): ");
+                System.out.print("Masukkan heuristik (Manhattan / Blocked): ");
                 String heuristic = scanner.nextLine().toUpperCase();
 
                 Result result = new Result();
