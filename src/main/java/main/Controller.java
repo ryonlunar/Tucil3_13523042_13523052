@@ -125,7 +125,8 @@ public class Controller {
                         visitedNodesCount = gbfs.getVisitedNodesCount();
                         break;
                     case "A*":
-                        AStar astar = new AStar(result.initState, result.heuristic);
+                        result.initState.methode = result.heuristic;
+                        AStar astar = new AStar(result.initState);
                         astar.search();
                         goalState = astar.getGoalState();
                         visitedNodesCount = astar.getVisitedNodesCount();

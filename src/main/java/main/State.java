@@ -237,7 +237,7 @@ public class State {
                     newState.parent = this;
                     newState.move = String.valueOf(vehicle.id) + " left";
                     newState.cost = this.cost + 1;
-                    newState.heuristicCost = getHeuristicCost(this.methode);
+                    if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
 
                     successors.add(newState);
                 }
@@ -256,7 +256,7 @@ public class State {
                 newState.parent = this;
                 newState.move = String.valueOf(vehicle.id) + " right";
                 newState.cost = this.cost + 1;
-                newState.heuristicCost = getHeuristicCost(this.methode);
+                if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
 
                 successors.add(newState);
             }
@@ -291,7 +291,7 @@ public class State {
                     newState.move = String.valueOf(vehicle.id) + " up";
                     newState.cost = this.cost + 1;
 
-                    newState.heuristicCost = getHeuristicCost(this.methode);
+                    if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
 
                     successors.add(newState);
                 }
@@ -315,13 +315,13 @@ public class State {
                 newState.parent = this;
                 newState.move = String.valueOf(vehicle.id) + " down";
                 newState.cost = this.cost + 1;
-                newState.heuristicCost = getHeuristicCost(this.methode);
+                if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
 
                 successors.add(newState);
             }
         }
     }
-    private int getHeuristicCost(String methode) {
+    public int getHeuristicCost(String methode) {
         // System.out.println("DEBUG getHeuristicCost: metode heuristik = " + methode);
         methode = methode.toLowerCase();
         if (methode.equals("manhattan")) {
@@ -334,7 +334,7 @@ public class State {
         }
     }
 
-    private int getManhattanDistance() {
+    public int getManhattanDistance() {
         Vehicle primary = vehicles.get('P');
         if (primary == null) return -1;
 

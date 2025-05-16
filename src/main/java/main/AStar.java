@@ -11,9 +11,8 @@ public class AStar extends BaseSearch {
     private State goalState;
     private String heuristic;
 
-    public AStar(State initState, String heuristic) {
+    public AStar(State initState) {
         super(initState);
-        this.heuristic = heuristic;
         this.openSet = new PriorityQueue<>(Comparator.comparingInt(s -> s.cost + heuristic(s)));
         this.closedSet = new HashSet<>();
     }
@@ -21,7 +20,7 @@ public class AStar extends BaseSearch {
     // Placeholder untuk heuristic GBFS yang akan diintegrasikan nanti
     private int heuristic(State state) {
         // Placeholder for future implementation (GBFS heuristic)
-        return 0; // Sementara return 0 sebagai UCS
+        return state.getHeuristicCost(state.methode);
     }
 
     @Override
@@ -66,6 +65,6 @@ public class AStar extends BaseSearch {
     @Override
     public int getVisitedNodesCount() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getVisitedNodesCount'");
+        return visitedNodesCount;
     }
 }
