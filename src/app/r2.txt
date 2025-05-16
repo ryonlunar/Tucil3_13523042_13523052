@@ -1,0 +1,130 @@
+Banyaknya node yang dikunjungi: 108660
+Waktu eksekusi: 4.4760 detik
+
+Papan Awal: 
+ ..BB.F
+ ....DF
+ G.CCDF
+ GH..II
+K.HJAPP
+ LLJAMM
+
+Gerakan  1: H up
+ ..BB.F
+ ....DF
+ GHCCDF
+ GH..II
+K..JAPP
+ LLJAMM
+
+Gerakan  2: H up
+ ..BB.F
+ .H..DF
+ GHCCDF
+ G...II
+K..JAPP
+ LLJAMM
+
+Gerakan  3: H up
+ .HBB.F
+ .H..DF
+ G.CCDF
+ G...II
+K..JAPP
+ LLJAMM
+
+Gerakan  4: J up
+ .HBB.F
+ .H..DF
+ G.CCDF
+ G.J.II
+K..JAPP
+ LL.AMM
+
+Gerakan  5: G up
+ .HBB.F
+ GH..DF
+ G.CCDF
+ ..J.II
+K..JAPP
+ LL.AMM
+
+Gerakan  6: G up
+ GHBB.F
+ GH..DF
+ ..CCDF
+ ..J.II
+K..JAPP
+ LL.AMM
+
+Gerakan  7: C left
+ GHBB.F
+ GH..DF
+ .CC.DF
+ ..J.II
+K..JAPP
+ LL.AMM
+
+Gerakan  8: C left
+ GHBB.F
+ GH..DF
+ CC..DF
+ ..J.II
+K..JAPP
+ LL.AMM
+
+Gerakan  9: A up
+ GHBB.F
+ GH..DF
+ CC..DF
+ ..JAII
+K..JAPP
+ LL..MM
+
+Gerakan  10: A up
+ GHBB.F
+ GH..DF
+ CC.ADF
+ ..JAII
+K..J.PP
+ LL..MM
+
+Gerakan  11: P left
+ GHBB.F
+ GH..DF
+ CC.ADF
+ ..JAII
+K..JPP.
+ LL..MM
+
+Gerakan  12: J up
+ GHBB.F
+ GH..DF
+ CCJADF
+ ..JAII
+K...PP.
+ LL..MM
+
+Gerakan  13: P left
+ GHBB.F
+ GH..DF
+ CCJADF
+ ..JAII
+K..PP..
+ LL..MM
+
+Gerakan  14: P left
+ GHBB.F
+ GH..DF
+ CCJADF
+ ..JAII
+K.PP...
+ LL..MM
+
+Gerakan  15: P left
+ GHBB.F
+ GH..DF
+ CCJADF
+ ..JAII
+KPP....
+ LL..MM

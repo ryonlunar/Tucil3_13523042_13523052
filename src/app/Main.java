@@ -5,7 +5,7 @@ public class Main {
         try {
             
             // Parse input file
-            InputParser.Result result = InputParser.parse("app/test_input.txt");
+            InputParser.Result result = InputParser.parse("app/t3.txt");
             
             long startTime = System.currentTimeMillis();
 
