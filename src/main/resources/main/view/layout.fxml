@@ -38,6 +38,8 @@
                     </toggleGroup>
                 </RadioButton>
                 <RadioButton fx:id="blockedRadio" text="Blocked" toggleGroup="$heuristicGroup" />
+                <RadioButton fx:id="combinedMBRadio" text="combinedMB" toggleGroup="$heuristicGroup" />
+                <RadioButton fx:id="chebysevRadio" text="Chebysev" toggleGroup="$heuristicGroup" />
             </HBox>
 
             <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />

@@ -58,7 +58,10 @@ public class Controller {
     private Button pauseButton;
     private boolean isPaused = false;
 
-    @FXML RadioButton idaRadio;
+    @FXML private RadioButton idaRadio;
+
+    @FXML private RadioButton combinedMBRadio;
+    @FXML private RadioButton chebysevRadio;
     // Menambahkan metode baru
     @FXML
     private void initialize() {
@@ -99,14 +102,15 @@ public class Controller {
 
         // Mengosongkan hasil sebelumnya
         outputArea.clear();
-
+        String heuristiCh = blockedRadio.isSelected() ? "BLOCKED" : 
+                  combinedMBRadio.isSelected() ? "combinedMB" : chebysevRadio.isSelected() ? "CHEBYSHEV" : "MANHATTAN";
         // Menjalankan algoritma di background agar UI tetap responsif
         CompletableFuture.runAsync(() -> {
             try {
                 // Parse input file
                 InputParser.Result result = InputParser.parse(filePath,
                         ucsRadio.isSelected() ? "UCS" : astarRadio.isSelected() ? "A*" : gbfsRadio.isSelected() ? "GBFS" : "IDA*",
-                        blockedRadio.isSelected() ? "BLOCKED" : "BLOCKED");
+                        heuristiCh);
 
                 appendOutput("Running " + result.algo + " algorithm...");
 

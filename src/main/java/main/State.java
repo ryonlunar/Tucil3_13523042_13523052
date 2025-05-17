@@ -201,10 +201,10 @@ public class State {
         for (Map.Entry<Character, Vehicle> entry : vehicles.entrySet()) {
             Vehicle v = entry.getValue();
 
-            if (v.orientation == Orientation.HORIZONTAL) {
+                if (v.orientation == Orientation.HORIZONTAL) {
                 tryMoveHorizontal(v, succ, -1);
                 tryMoveHorizontal(v, succ, 1);
-            } else {
+                } else {
                 tryMoveVertical(v, succ, -1);
                 tryMoveVertical(v, succ, 1);
             }
@@ -213,9 +213,10 @@ public class State {
                 // System.out.println("DEBUG generateSucc: PERHATIAN - Tidak ada successor yang dihasilkan!");
             }
 
-        }
+                }
         return succ;
     }
+
 
 
     private void tryMoveHorizontal(Vehicle vehicle, List<State> successors, int direction) {
@@ -328,7 +329,12 @@ public class State {
             return this.getManhattanDistance();
         } else if (methode.equals("blocked")) {
             return this.getBlockedVehicles();
-        } else {
+        } else if (methode.equalsIgnoreCase("combinedMB")) {
+            return this.getManhattanDistance() + this.getBlockedVehicles();
+        } else if (methode.equals("Chebyshev")) {
+            return this.getChebysevDistance();
+        }
+         else {
             // System.out.println("DEBUG getHeuristicCost: PERHATIAN - Metode heuristik tidak valid!");
             return -1;
         }
@@ -416,5 +422,23 @@ public class State {
     }
     return blockedVehicles.size();
 }
+
+    public int getChebysevDistance() {
+        Vehicle primary = vehicles.get('P');
+        if (primary == null) return -1;
+
+        int pr = primary.row;
+        int pc = primary.col;
+        int len = primary.length;
+        Orientation or = primary.orientation;
+
+        if (or == Orientation.HORIZONTAL) {
+            int pEndCol = pc + len - 1;
+            return Math.max(Math.abs(exitRow - pr), Math.abs(exitCol - pEndCol));
+        } else {
+            int pEndRow = pr + len - 1;
+            return Math.max(Math.abs(exitRow - pEndRow), Math.abs(exitCol - pc));
+        }
+    }
 
 }

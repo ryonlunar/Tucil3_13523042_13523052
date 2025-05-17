@@ -17,7 +17,7 @@ public class IDAStar extends BaseSearch {
         while (true){
             System.out.println("DEBUG IDA*: Threshold saat ini: " + threshold);
             int result = DLS(initState, 0);
-                        if (result == -1) {
+            if (result == -1) {
                 goalState = null;
                 return;
             } else if (result == Integer.MIN_VALUE) {
