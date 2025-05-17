@@ -90,11 +90,12 @@ public class InputParser {
                 // print pieceCount
                 throw new Exception("invalid piece count");
             }
-
+            System.out.println("TEST1");
             State initState = new State(vehicles, lines.size(), lines.get(0).length(), board, null, null, 0);
             initState.exitRow = exitRow;
             initState.exitCol = exitCol;
-
+            
+            System.out.println("TEST2");
             Result result = new Result();
             result.initState = initState;
             result.algo = algorithm;
@@ -103,12 +104,14 @@ public class InputParser {
             System.out.println("Posisi Kendaraan P: " + vehicles.get('P').row + "," + vehicles.get('P').col);
             // print letak exit
             System.out.println("Posisi Exit: " + exitRow + "," + exitCol);
+            System.out.println("TEST3");
             result.initState = initState;
             result.algo = algorithm;
             result.heuristic = heuristic;
             System.out.println("DEBUG Parser: Posisi exit terdeteksi: (" + exitRow + "," + exitCol + ")");
-
+            
             // Setelah mendeteksi kendaraan
+            System.out.println("TEST4");
             System.out.println("DEBUG Parser: Jumlah kendaraan: " + (vehicles.size() - 1));
             System.out.println("DEBUG Parser: Primary vehicle position: (" +
                     vehicles.get('P').row + "," + vehicles.get('P').col +

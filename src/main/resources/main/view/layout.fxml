@@ -11,13 +11,61 @@
     
     <children>
         <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <!-- Input Method Selection -->
             <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Input Method:" />
+                <RadioButton fx:id="fileInputRadio" text="File Input" selected="true">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="inputMethodGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="directInputRadio" text="Direct Input" toggleGroup="$inputMethodGroup" />
+            </HBox>
+            
+            <!-- File Input Section -->
+            <HBox spacing="10" alignment="CENTER_LEFT" fx:id="fileInputSection">
                 <Label text="Input File:" />
                 <TextField fx:id="filePathField" promptText="Choose input file" HBox.hgrow="ALWAYS" />
                 <Button text="Browse" fx:id="browseButton" onAction="#browseFile"/>
             </HBox>
+            
+            <!-- Direct Input Section -->
+            <VBox spacing="10" fx:id="directInputSection" visible="false">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Board Size:" />
+                    <TextField fx:id="rowsField" promptText="Rows" prefWidth="60" text="6" />
+                    <Label text="x" />
+                    <TextField fx:id="colsField" promptText="Columns" prefWidth="60" text="6" />
+                    <Button text="Create Board" fx:id="createBoardButton" onAction="#createBoard"/>
+                </HBox>
+                
+                <HBox spacing="10">
+                    <VBox spacing="5">
+                        <Label text="Vehicle:" />
+                        <HBox spacing="5">
+                            <RadioButton fx:id="horizontalRadio" text="Horizontal" selected="true">
+                                <toggleGroup>
+                                    <ToggleGroup fx:id="orientationGroup" />
+                                </toggleGroup>
+                            </RadioButton>
+                            <RadioButton fx:id="verticalRadio" text="Vertical" toggleGroup="$orientationGroup" />
+                        </HBox>
+                        <Label text="Length:" />
+                        <ComboBox fx:id="lengthCombo" promptText="Length" />
+                        <ComboBox fx:id="vehicleIdCombo" promptText="Vehicle" />
+                        <Button text="Place Vehicle" fx:id="placeVehicleButton" onAction="#toggleVehiclePlacement" />
+                        <Button text="Place Exit" fx:id="placeExitButton" onAction="#toggleExitPlacement" />
+                        <Button text="Clear Board" fx:id="clearBoardButton" onAction="#clearBoard" />
+                    </VBox>
+                    
+                    <GridPane fx:id="boardGrid" gridLinesVisible="true" prefWidth="400" prefHeight="300" />
+                </HBox>
+                
+                <Button text="Save to File" fx:id="saveToFileButton" onAction="#saveToFile" />
+                <Button text="Generate Board" fx:id="generateBoardButton" onAction="#generateAndSaveBoard" />
+            </VBox>
 
-            <!-- Algorithm selection section -->
+            <!-- Algorithm selection section (existing) -->
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="Algorithm:" />
                 <RadioButton fx:id="ucsRadio" text="UCS" selected="true">
@@ -43,15 +91,13 @@
             </HBox>
 
             <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
-            <!-- Animation section -->
+            
+            <!-- Animation section (existing) -->
             <Label text="Solution Visualization:" />
             <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
             <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
             <Button text="New Test Case" onAction="#handleNewTestCase"/>
             <TextArea fx:id="outputArea" editable="false" wrapText="true" prefHeight="200.0" VBox.vgrow="ALWAYS" />
-            <!-- Di layout.fxml tambahkan tombol: -->
-
         </VBox>
     </children>
 </AnchorPane>
-
