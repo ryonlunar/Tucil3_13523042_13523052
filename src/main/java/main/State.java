@@ -333,13 +333,20 @@ public class State {
             return this.getManhattanDistance() + this.getBlockedVehicles();
         } else if (methode.equals("Chebyshev")) {
             return this.getChebysevDistance();
-        }
-         else {
+        }    else if (methode.equalsIgnoreCase("EVOLVED")) {
+            return (int)(0.4 * getManhattanDistance() + 
+                    0.3 * getBlockedVehicles() + 
+                    0.2 * getChebysevDistance() + 
+                    0.1 * getCombinedMB());
+        }else {
             // System.out.println("DEBUG getHeuristicCost: PERHATIAN - Metode heuristik tidak valid!");
             return -1;
         }
     }
 
+    private int getCombinedMB() {
+        return getManhattanDistance() + getBlockedVehicles();
+    }
     public int getManhattanDistance() {
         Vehicle primary = vehicles.get('P');
         if (primary == null) return -1;

@@ -76,6 +76,7 @@
                 <RadioButton fx:id="gbfsRadio" text="GBFS" toggleGroup="$algoGroup" />
                 <RadioButton fx:id="astarRadio" text="A*" toggleGroup="$algoGroup" />
                 <RadioButton fx:id="idaRadio" text="IDA*" toggleGroup="$algoGroup" />
+                <RadioButton fx:id="gaRadio" text="GA" toggleGroup="$algoGroup" />
             </HBox>
 
             <HBox spacing="10" alignment="CENTER_LEFT" fx:id="heuristicBox" visible="false">
@@ -88,6 +89,7 @@
                 <RadioButton fx:id="blockedRadio" text="Blocked" toggleGroup="$heuristicGroup" />
                 <RadioButton fx:id="combinedMBRadio" text="combinedMB" toggleGroup="$heuristicGroup" />
                 <RadioButton fx:id="chebysevRadio" text="Chebysev" toggleGroup="$heuristicGroup" />
+                <RadioButton fx:id="evolvedRadio" text="Evolved" toggleGroup="$heuristicGroup" />
             </HBox>
 
             <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
