@@ -393,9 +393,11 @@ public class State {
         if (methode.equals("manhattan")) {
             return this.getManhattanDistance();
         } else if (methode.equals("blocked")) {
+            // System.out.println("DEBUG getHeuristicCost: blocked vehicles = " + this.getBlockedVehicles());
             return this.getBlockedVehicles();
         } else if (methode.equalsIgnoreCase("combinedMB")) {
-            return this.getManhattanDistance() + this.getBlockedVehicles();
+            double ceil = exitRow == vehicles.get('P').row ? exitRow : vehicles.get('P').col;
+            return (int) Math.ceil((double) this.getManhattanDistance() / ceil) + this.getBlockedVehicles();
         } else if (methode.equals("Chebyshev")) {
             return this.getChebysevDistance();
         }
@@ -415,10 +417,10 @@ public class State {
         Orientation or = primary.orientation;
 
         if (or == Orientation.HORIZONTAL) {
-            int pEndCol = pc + len - 1;
+            int pEndCol = pc + len;
             return Math.abs(exitRow - pr) + Math.abs(exitCol - pEndCol);
         } else {
-            int pEndRow = pr + len - 1;
+            int pEndRow = pr + len;
             return Math.abs(exitRow - pEndRow) + Math.abs(exitCol - pc);
         }
     }
@@ -481,12 +483,12 @@ public class State {
                 char ch = board[r][pc];
                 if (ch != '.' && ch != 'P' && ch != 'K') {
                     blockedVehicles.add(ch);
+                    }
                 }
             }
         }
+        return blockedVehicles.size();
     }
-    return blockedVehicles.size();
-}
 
     public int getChebysevDistance() {
         Vehicle primary = vehicles.get('P');
@@ -503,6 +505,16 @@ public class State {
         } else {
             int pEndRow = pr + len - 1;
             return Math.max(Math.abs(exitRow - pEndRow), Math.abs(exitCol - pc));
+        }
+    }
+
+    public void printState() {
+        System.out.println("Current State:");
+        for (int i = 0; i < tot_rows; i++) {
+            for (int j = 0; j < tot_cols; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
         }
     }
 
