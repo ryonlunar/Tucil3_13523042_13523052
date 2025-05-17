@@ -62,6 +62,7 @@
                 </HBox>
                 
                 <Button text="Save to File" fx:id="saveToFileButton" onAction="#saveToFile" />
+                <Button text="Generate Board" fx:id="generateBoardButton" onAction="#generateAndSaveBoard" />
             </VBox>
 
             <!-- Algorithm selection section (existing) -->

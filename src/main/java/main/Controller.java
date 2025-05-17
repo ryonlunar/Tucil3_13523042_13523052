@@ -578,8 +578,13 @@ public class Controller {
 
             // Save to temporary file
             try {
-                File tempFile = File.createTempFile("direct_input_", ".txt");
-                tempFile.deleteOnExit();
+                File tempDir = getTempDirectory();
+                if (tempDir == null) {
+                    showAlert("Error", "Failed to create temporary directory.");
+                    return;
+                }
+                
+                File tempFile = new File(tempDir, "direct_input_" + System.currentTimeMillis() + ".txt");
                 saveBoard(tempFile);
                 filePathField.setText(tempFile.getAbsolutePath());
             } catch (Exception e) {
@@ -899,6 +904,61 @@ public class Controller {
             outputArea.setText(countStr);
         } else {
             outputArea.appendText("\n" + countStr);
+        }
+    }
+
+    private File getTempDirectory() {
+        try {
+            // Create directory in the current working directory
+            String currentDir = System.getProperty("user.dir");
+            File tempDir = new File(currentDir, "temp_boards");
+            if (!tempDir.exists()) {
+                tempDir.mkdir();
+            }
+            return tempDir;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @FXML
+    private void generateAndSaveBoard() {
+        // Validate board exists
+        if (directInputBoard == null) {
+            showAlert("Error", "Please create a board first");
+            return;
+        }
+        
+        // Check if primary vehicle exists
+        if (!directInputVehicles.containsKey('P')) {
+            showAlert("Error", "Primary vehicle is required.");
+            return;
+        }
+        
+        // Check if exit is placed
+        if (exitRow == -1 || exitCol == -1) {
+            showAlert("Error", "Exit position is required.");
+            return;
+        }
+        
+        // Create and save to temp file
+        try {
+            File tempDir = getTempDirectory();
+            if (tempDir == null) {
+                showAlert("Error", "Failed to create temporary directory.");
+                return;
+            }
+            
+            File tempFile = new File(tempDir, "direct_input_" + System.currentTimeMillis() + ".txt");
+            saveBoard(tempFile);
+            filePathField.setText(tempFile.getAbsolutePath());
+            // Switch ke File Input
+            fileInputRadio.setSelected(true);
+
+            appendOutput("Board generated and ready to run.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to generate board file: " + e.getMessage());
         }
     }
 
