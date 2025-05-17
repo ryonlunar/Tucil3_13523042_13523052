@@ -58,6 +58,7 @@ public class Controller {
     private Button pauseButton;
     private boolean isPaused = false;
 
+    @FXML RadioButton idaRadio;
     // Menambahkan metode baru
     @FXML
     private void initialize() {
@@ -68,6 +69,10 @@ public class Controller {
 
         gbfsRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             heuristicBox.setVisible(newVal || astarRadio.isSelected());
+        });
+
+        idaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
         });
     }
 
@@ -100,7 +105,7 @@ public class Controller {
             try {
                 // Parse input file
                 InputParser.Result result = InputParser.parse(filePath,
-                        ucsRadio.isSelected() ? "UCS" : astarRadio.isSelected() ? "A*" : "GBFS",
+                        ucsRadio.isSelected() ? "UCS" : astarRadio.isSelected() ? "A*" : gbfsRadio.isSelected() ? "GBFS" : "IDA*",
                         blockedRadio.isSelected() ? "BLOCKED" : "BLOCKED");
 
                 appendOutput("Running " + result.algo + " algorithm...");
@@ -130,6 +135,13 @@ public class Controller {
                         astar.search();
                         goalState = astar.getGoalState();
                         visitedNodesCount = astar.getVisitedNodesCount();
+                        break;
+                    case "IDA*":
+                        result.initState.methode = result.heuristic;
+                        IDAStar idaStar = new IDAStar(result.initState);
+                        idaStar.search();
+                        goalState = idaStar.getGoalState();
+                        visitedNodesCount = idaStar.getVisitedNodesCount();
                         break;
                 }
                 long endTime = System.currentTimeMillis();

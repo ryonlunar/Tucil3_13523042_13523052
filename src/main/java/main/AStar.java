@@ -9,7 +9,6 @@ public class AStar extends BaseSearch {
     private PriorityQueue<State> openSet;
     private Set<State> closedSet;
     private State goalState;
-    private String heuristic;
 
     public AStar(State initState) {
         super(initState);
@@ -26,7 +25,7 @@ public class AStar extends BaseSearch {
     @Override
     public void search() {
         openSet.add(initState);
-        System.out.println("DEBUG AStar: Memulai pencarian dengan heuristic " + heuristic);
+        System.out.println("DEBUG AStar: Memulai pencarian dengan heuristic " + initState.methode);
         
         while(!openSet.isEmpty()) {
             State current = openSet.poll();

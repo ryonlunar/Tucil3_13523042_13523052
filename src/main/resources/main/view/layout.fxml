@@ -27,6 +27,7 @@
                 </RadioButton>
                 <RadioButton fx:id="gbfsRadio" text="GBFS" toggleGroup="$algoGroup" />
                 <RadioButton fx:id="astarRadio" text="A*" toggleGroup="$algoGroup" />
+                <RadioButton fx:id="idaRadio" text="IDA*" toggleGroup="$algoGroup" />
             </HBox>
 
             <HBox spacing="10" alignment="CENTER_LEFT" fx:id="heuristicBox" visible="false">
