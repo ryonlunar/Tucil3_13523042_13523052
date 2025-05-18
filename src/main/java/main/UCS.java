@@ -1,6 +1,10 @@
 package main;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 public class UCS extends BaseSearch {
     public PriorityQueue<State> queue;
@@ -17,40 +21,40 @@ public class UCS extends BaseSearch {
     @Override
     public void search() {
         queue.add(initState);
-        System.out.println("DEBUG UCS: Pencarian dimulai dengan initial state");
-        System.out.println("DEBUG UCS: Primary position: (" + initState.vehicles.get('P').row + ","
-                + initState.vehicles.get('P').col + ")");
-        System.out.println("DEBUG UCS: Exit position: (" + initState.exitRow + "," + initState.exitCol + ")");
+        // System.out.println("DEBUG UCS: Pencarian dimulai dengan initial state");
+        // System.out.println("DEBUG UCS: Primary position: (" + initState.vehicles.get('P').row + ","
+        //         + initState.vehicles.get('P').col + ")");
+        // System.out.println("DEBUG UCS: Exit position: (" + initState.exitRow + "," + initState.exitCol + ")");
         while (!queue.isEmpty()) {
             State currState = queue.poll();
             visitedNodesCount++;
-            if (visitedNodesCount % 1000 == 0) {
-                System.out.println("DEBUG UCS: Nodes visited: " + visitedNodesCount + ", Queue size: " + queue.size());
-            }
+            // if (visitedNodesCount % 1000 == 0) {
+            //     System.out.println("DEBUG UCS: Nodes visited: " + visitedNodesCount + ", Queue size: " + queue.size());
+            // }
 
             // Debug pengecekan goal state setiap 100 node
-            if (visitedNodesCount % 100 == 0) {
-                Vehicle primary = currState.vehicles.get('P');
-                System.out.println("DEBUG UCS: Node #" + visitedNodesCount + " - Primary at (" +
-                        primary.row + "," + primary.col + "), Cost: " + currState.cost);
-            }
+            // if (visitedNodesCount % 100 == 0) {
+            //     Vehicle primary = currState.vehicles.get('P');
+            //     System.out.println("DEBUG UCS: Node #" + visitedNodesCount + " - Primary at (" +
+            //             primary.row + "," + primary.col + "), Cost: " + currState.cost);
+            // }
 
             if (currState.isGoal(currState.vehicles.get('P'))) {
                 // handle solusi
                 goalState = currState;
-                System.out.println("DEBUG UCS: GOAL STATE DITEMUKAN pada node #" + visitedNodesCount);
+                // System.out.println("DEBUG UCS: GOAL STATE DITEMUKAN pada node #" + visitedNodesCount);
                 return;
             }
 
             processState(currState);
         }
-        System.out.println("DEBUG UCS: Pencarian selesai tanpa menemukan solusi. Total nodes: " + visitedNodesCount);
+        // System.out.println("DEBUG UCS: Pencarian selesai tanpa menemukan solusi. Total nodes: " + visitedNodesCount);
     }
 
     @Override
     protected void processState(State currState) {
         if (visited.contains(currState)) {
-            System.out.println("DEBUG UCS: State sudah dikunjungi, skipping");
+            // System.out.println("DEBUG UCS: State sudah dikunjungi, skipping");
             return;
         }
         visited.add(currState);
@@ -58,7 +62,7 @@ public class UCS extends BaseSearch {
         // // Generate successors akan diimplementasikan di step berikutnya
         List<State> succ = currState.generateSucc();
         if (visitedNodesCount % 1000 == 0) {
-            System.out.println("DEBUG UCS: Generated " + succ.size() + " successors for node #" + visitedNodesCount);
+            // System.out.println("DEBUG UCS: Generated " + succ.size() + " successors for node #" + visitedNodesCount);
         }
         for (State s : succ) {
             if (!visited.contains(s)) {
