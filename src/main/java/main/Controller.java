@@ -1,11 +1,28 @@
 package main;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.ColumnConstraints;
@@ -14,20 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.util.Duration;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.io.FileInputStream;
-import java.io.PrintWriter;
 
 public class Controller {
 
@@ -78,6 +82,9 @@ public class Controller {
     @FXML private ImageView filePreviewImage;
 
     @FXML private Button generateBoardButton;
+
+    @FXML private Slider animationSlider;
+    @FXML private Label frameLabel;
 
     // Fields to store board state
     private char[][] directInputBoard;
@@ -733,6 +740,37 @@ public class Controller {
                 animationView.setImage(animationFrames.get(0));
                 currentFrame = 0;
 
+                // Configure slider
+                animationSlider.setMin(0);
+                animationSlider.setMax(animationFrames.size() - 1);
+                animationSlider.setValue(0);
+                animationSlider.setBlockIncrement(1);
+                animationSlider.setMajorTickUnit(1);
+                animationSlider.setMinorTickCount(0);
+                animationSlider.setSnapToTicks(true);
+                animationSlider.setShowTickMarks(true);
+                animationSlider.setShowTickLabels(true);
+
+                // Update frame label
+                updateFrameLabel(0, path.get(0).move);
+
+                // Add listener to slider
+                animationSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    int frameIndex = newVal.intValue();
+                    animationView.setImage(animationFrames.get(frameIndex));
+                    currentFrame = frameIndex;
+                    
+                    String moveText = frameIndex > 0 ? path.get(frameIndex).move : "Initial";
+                    updateFrameLabel(frameIndex, moveText);
+                    
+                    // If animation is running, pause it when user manually changes frame
+                    if (animationTimeline != null && animationTimeline.getStatus() == Animation.Status.RUNNING) {
+                        animationTimeline.pause();
+                        isPaused = true;
+                        pauseButton.setText("Resume");
+                    }
+                });
+
                 // Stop any existing animation
                 if (animationTimeline != null) {
                     animationTimeline.stop();
@@ -743,6 +781,10 @@ public class Controller {
                         new KeyFrame(Duration.millis(500), event -> {
                             currentFrame = (currentFrame + 1) % animationFrames.size();
                             animationView.setImage(animationFrames.get(currentFrame));
+                            animationSlider.setValue(currentFrame);
+
+                            String moveText = currentFrame > 0 ? path.get(currentFrame).move : "Initial";
+                        updateFrameLabel(currentFrame, moveText);
                         }));
                 animationTimeline.setCycleCount(Timeline.INDEFINITE);
                 animationTimeline.play();
@@ -752,6 +794,14 @@ public class Controller {
             e.printStackTrace();
             appendOutput("Failed to create animation: " + e.getMessage());
         }
+    }
+
+    private void updateFrameLabel(int frameIndex, String moveText) {
+        String labelText = String.format("Frame %d/%d: %s", 
+                                        frameIndex + 1, 
+                                        animationFrames.size(),
+                                        frameIndex > 0 ? moveText : "Initial State");
+        frameLabel.setText(labelText);
     }
 
     private String boardToString(char[][] board) {
