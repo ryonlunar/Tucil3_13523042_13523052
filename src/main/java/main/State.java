@@ -1,6 +1,13 @@
 package main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class State {
     public Map<Character, Vehicle> vehicles; // map of Vehicle
@@ -220,104 +227,162 @@ public class State {
 
 
     private void tryMoveHorizontal(Vehicle vehicle, List<State> successors, int direction) {
-        int newCol;
-
         if (direction < 0) {
-            newCol = vehicle.col - 1;
-            if (newCol >= 0 && board[vehicle.row][newCol] == '.') {
-                int backPos = vehicle.col + vehicle.length - 1;
-                if (backPos < tot_cols && board[vehicle.row][backPos] == vehicle.id) {
-                    State newState = this.copy();
-                    Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
-
-                    newState.board[vehicle.row][newCol] = vehicle.id;
-                    newState.board[vehicle.row][backPos] = '.';
-
-                    movedVehicle.col = newCol;
-
-                    newState.parent = this;
-                    newState.move = String.valueOf(vehicle.id) + " left";
-                    newState.cost = this.cost + 1;
-                    if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
-
-                    successors.add(newState);
+            // geser ke kiri le
+            int maxSpaces = 0;
+            for (int col = vehicle.col - 1; col >= 0; col--) {
+                if (board[vehicle.row][col] == '.') {
+                    maxSpaces++;
+                } else {
+                    break; 
                 }
             }
-        } else {
-            int frontCol = vehicle.col + vehicle.length;
-            if (frontCol < tot_cols && board[vehicle.row][frontCol] == '.') {
+            
+            // coba semua, masukin ke successor
+            for (int spaces = 1; spaces <= maxSpaces; spaces++) {
+                int newCol = vehicle.col - spaces;
+                
+                int backPos = vehicle.col + vehicle.length - 1;
+                if (backPos >= tot_cols || board[vehicle.row][backPos] != vehicle.id) {
+                    continue; 
+                }
+                
                 State newState = this.copy();
                 Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
-                // Update board
-                newState.board[vehicle.row][frontCol] = vehicle.id;
-                newState.board[vehicle.row][vehicle.col] = '.';
-
-                movedVehicle.col = vehicle.col + 1;
-
+                
+                for (int i = 0; i < vehicle.length; i++) {
+                    if (newCol + i < tot_cols) {
+                        newState.board[vehicle.row][newCol + i] = vehicle.id;
+                    }
+                }
+                
+                for (int i = 0; i < spaces; i++) {
+                    newState.board[vehicle.row][backPos - i] = '.';
+                }
+                
+                // Update
+                movedVehicle.col = newCol;
+                
                 newState.parent = this;
-                newState.move = String.valueOf(vehicle.id) + " right";
+                newState.move = String.valueOf(vehicle.id) + " left " + spaces;
                 newState.cost = this.cost + 1;
-                if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
-
+                if (this.methode != null) newState.heuristicCost = newState.getHeuristicCost(this.methode);
+                
+                successors.add(newState);
+            }
+        } else {
+            // geser ke kanan ,le
+            int maxSpaces = 0;
+            for (int col = vehicle.col + vehicle.length; col < tot_cols; col++) {
+                if (board[vehicle.row][col] == '.') {
+                    maxSpaces++;
+                } else {
+                    break; 
+                }
+            }
+            
+            // masukin semua possibility ke successors
+            for (int spaces = 1; spaces <= maxSpaces; spaces++) {
+                int newCol = vehicle.col + spaces;
+                
+                State newState = this.copy();
+                Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
+                
+                for (int i = 0; i < vehicle.length; i++) {
+                    newState.board[vehicle.row][vehicle.col + i] = '.';
+                }
+                
+                for (int i = 0; i < vehicle.length; i++) {
+                    newState.board[vehicle.row][newCol + i] = vehicle.id;
+                }
+                
+                // Update
+                movedVehicle.col = newCol;
+                
+                newState.parent = this;
+                newState.move = String.valueOf(vehicle.id) + " right " + spaces;
+                newState.cost = this.cost + 1;
+                if (this.methode != null) newState.heuristicCost = newState.getHeuristicCost(this.methode);
+                
                 successors.add(newState);
             }
         }
-
     }
 
     private void tryMoveVertical(Vehicle vehicle, List<State> successors, int direction) {
-        // Untuk kendaraan vertikal, periksa apakah bisa bergerak ke atas/bawah
-        int newRow;
         if (direction < 0) {
-            // Bergerak ke atas
-            newRow = vehicle.row - 1;
-            // Periksa apakah posisi baru valid
-            if (newRow >= 0 && board[newRow][vehicle.col] == '.') {
-                // Cek apakah bagian bawah kendaraan bisa kosong
-                int bottomPosition = vehicle.row + vehicle.length - 1;
-                if (bottomPosition < tot_rows && board[bottomPosition][vehicle.col] == vehicle.id) {
-                    // Buat state baru dengan kendaraan yang sudah digeser
-                    State newState = this.copy();
-                    Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
-
-                    // Update board
-                    newState.board[newRow][vehicle.col] = vehicle.id;
-                    newState.board[bottomPosition][vehicle.col] = '.';
-
-                    // Update posisi kendaraan
-                    movedVehicle.row = newRow;
-
-                    // Set parent dan move
-                    newState.parent = this;
-                    newState.move = String.valueOf(vehicle.id) + " up";
-                    newState.cost = this.cost + 1;
-
-                    if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
-
-                    successors.add(newState);
+            // Geser ke atas
+            int maxSpaces = 0;
+            for (int row = vehicle.row - 1; row >= 0; row--) {
+                if (board[row][vehicle.col] == '.') {
+                    maxSpaces++;
+                } else {
+                    break;
                 }
             }
-        } else {
-            // Bergerak ke bawah
-            int bottomRow = vehicle.row + vehicle.length;
-            if (bottomRow < tot_rows && board[bottomRow][vehicle.col] == '.') {
-                // Buat state baru dengan kendaraan yang sudah digeser
+            
+            // sama kaya yang horizontal
+            for (int spaces = 1; spaces <= maxSpaces; spaces++) {
+                int newRow = vehicle.row - spaces;
+                
+                int bottomRow = vehicle.row + vehicle.length - 1;
+                if (bottomRow >= tot_rows || board[bottomRow][vehicle.col] != vehicle.id) {
+                    continue;
+                }
+                
                 State newState = this.copy();
                 Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
-
-                // Update board
-                newState.board[bottomRow][vehicle.col] = vehicle.id;
-                newState.board[vehicle.row][vehicle.col] = '.';
-
-                // Update posisi kendaraan
-                movedVehicle.row = vehicle.row + 1;
-
-                // Set parent dan move
+                
+                for (int i = 0; i < spaces; i++) {
+                    newState.board[newRow + i][vehicle.col] = vehicle.id;
+                }
+                
+                for (int i = 0; i < spaces; i++) {
+                    newState.board[bottomRow - i][vehicle.col] = '.';
+                }
+                
+                movedVehicle.row = newRow;
+                
                 newState.parent = this;
-                newState.move = String.valueOf(vehicle.id) + " down";
-                newState.cost = this.cost + 1;
-                if (this.methode != null) newState.heuristicCost = getHeuristicCost(this.methode);
-
+                newState.move = String.valueOf(vehicle.id) + " up " + spaces;
+                newState.cost = this.cost + 1; // Each multi-space move counts as 1
+                if (this.methode != null) newState.heuristicCost = newState.getHeuristicCost(this.methode);
+                
+                successors.add(newState);
+            }
+        } else {
+            // geser ka bawah
+            int maxSpaces = 0;
+            for (int row = vehicle.row + vehicle.length; row < tot_rows; row++) {
+                if (board[row][vehicle.col] == '.') {
+                    maxSpaces++;
+                } else {
+                    break;
+                }
+            }
+            
+            // Sama
+            for (int spaces = 1; spaces <= maxSpaces; spaces++) {
+                int newRow = vehicle.row + spaces;
+                
+                State newState = this.copy();
+                Vehicle movedVehicle = newState.vehicles.get(vehicle.id);
+                
+                for (int i = 0; i < vehicle.length; i++) {
+                    newState.board[vehicle.row + i][vehicle.col] = '.';
+                }
+                
+                for (int i = 0; i < vehicle.length; i++) {
+                    newState.board[newRow + i][vehicle.col] = vehicle.id;
+                }
+                
+                movedVehicle.row = newRow;
+                
+                newState.parent = this;
+                newState.move = String.valueOf(vehicle.id) + " down " + spaces;
+                newState.cost = this.cost + 1; // Each multi-space move counts as 1
+                if (this.methode != null) newState.heuristicCost = newState.getHeuristicCost(this.methode);
+                
                 successors.add(newState);
             }
         }
@@ -328,9 +393,11 @@ public class State {
         if (methode.equals("manhattan")) {
             return this.getManhattanDistance();
         } else if (methode.equals("blocked")) {
+            // System.out.println("DEBUG getHeuristicCost: blocked vehicles = " + this.getBlockedVehicles());
             return this.getBlockedVehicles();
         } else if (methode.equalsIgnoreCase("combinedMB")) {
-            return this.getManhattanDistance() + this.getBlockedVehicles();
+            double ceil = exitRow == vehicles.get('P').row ? exitRow : vehicles.get('P').col;
+            return (int) Math.ceil((double) this.getManhattanDistance() / ceil) + this.getBlockedVehicles();
         } else if (methode.equals("Chebyshev")) {
             return this.getChebysevDistance();
         }    else if (methode.equalsIgnoreCase("EVOLVED")) {
@@ -357,10 +424,10 @@ public class State {
         Orientation or = primary.orientation;
 
         if (or == Orientation.HORIZONTAL) {
-            int pEndCol = pc + len - 1;
+            int pEndCol = pc + len;
             return Math.abs(exitRow - pr) + Math.abs(exitCol - pEndCol);
         } else {
-            int pEndRow = pr + len - 1;
+            int pEndRow = pr + len;
             return Math.abs(exitRow - pEndRow) + Math.abs(exitCol - pc);
         }
     }
@@ -423,12 +490,12 @@ public class State {
                 char ch = board[r][pc];
                 if (ch != '.' && ch != 'P' && ch != 'K') {
                     blockedVehicles.add(ch);
+                    }
                 }
             }
         }
+        return blockedVehicles.size();
     }
-    return blockedVehicles.size();
-}
 
     public int getChebysevDistance() {
         Vehicle primary = vehicles.get('P');
@@ -445,6 +512,16 @@ public class State {
         } else {
             int pEndRow = pr + len - 1;
             return Math.max(Math.abs(exitRow - pEndRow), Math.abs(exitCol - pc));
+        }
+    }
+
+    public void printState() {
+        System.out.println("Current State:");
+        for (int i = 0; i < tot_rows; i++) {
+            for (int j = 0; j < tot_cols; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
         }
     }
 
