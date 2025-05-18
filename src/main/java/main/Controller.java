@@ -234,8 +234,14 @@ public class Controller {
         fileChooser.setTitle("Save Animation as GIF");
         fileChooser.getExtensionFilters().add(
                 new ExtensionFilter("GIF Images", "*.gif"));
-        File file = fileChooser.showSaveDialog(animationView.getScene().getWindow());
+        
+        String currentDir = System.getProperty("user.dir");
+        String testPath = currentDir.substring(0, currentDir.lastIndexOf(File.separator)) + File.separator + "Tucil3_13523042_13523052"+ File.separator + "test" + File.separator + "out";
+        System.out.println(testPath);
+        File initialDirectory = new File(testPath);
+        fileChooser.setInitialDirectory(initialDirectory);
 
+        File file = fileChooser.showSaveDialog(animationView.getScene().getWindow());
         if (file != null) {
             try {
                 // Convert all frames to BufferedImage
