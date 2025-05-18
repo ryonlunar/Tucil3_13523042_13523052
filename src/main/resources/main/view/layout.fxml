@@ -4,11 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
+<?import java.net.URL?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="main.Controller"
             prefWidth="800" prefHeight="800">
-    
+    <stylesheets>
+        <URL value="@style.css"/>
+    </stylesheets>
     <children>
         <ScrollPane AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" 
                    AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
@@ -18,9 +21,10 @@
                     <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
+                    <Label text="Rush Hour Solver" styleClass="header-label"/>
                     <!-- Input Method Selection -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Input Method:" />
+                        <Label text="Input Method" styleClass="section-label"/>
                         <RadioButton fx:id="fileInputRadio" text="File Input" selected="true">
                             <toggleGroup>
                                 <ToggleGroup fx:id="inputMethodGroup" />
@@ -76,7 +80,7 @@
 
                     <!-- Algorithm selection section (existing) -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Algorithm:" />
+                        <Label text="Input Method" styleClass="section-label"/>
                         <RadioButton fx:id="ucsRadio" text="UCS" selected="true">
                             <toggleGroup>
                                 <ToggleGroup fx:id="algoGroup" />
@@ -104,10 +108,12 @@
                     <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
                     
                     <!-- Animation section (existing) -->
-                    <Label text="Solution Visualization:" />
+                    <Label text="Input Method" styleClass="section-label"/>
                     <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
-                    <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
-                    <Button text="New Test Case" onAction="#handleNewTestCase"/>
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
+                        <Button text="New Test Case" onAction="#handleNewTestCase"/>
+                    </HBox>
                     <TextArea fx:id="outputArea" editable="false" wrapText="true" prefHeight="200.0" VBox.vgrow="ALWAYS" />
                 </VBox>
             </content>
