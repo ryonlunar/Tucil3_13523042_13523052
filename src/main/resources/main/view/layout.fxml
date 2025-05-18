@@ -115,14 +115,17 @@
                     <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
                     <!-- Animation section (existing) -->
                     <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
-                        <Button text="New Test Case" onAction="#handleNewTestCase"/>
-                    </HBox>
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label fx:id="frameLabel" text="Frame: 0/0" />
+                        <Slider fx:id="animationSlider" prefWidth="400" />
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
+                            <Button text="New Test Case" onAction="#handleNewTestCase"/>
+                        </HBox>
+                    </VBox>
                     <TextArea fx:id="outputArea" editable="false" wrapText="true" prefHeight="200.0" VBox.vgrow="ALWAYS" />
                 </VBox>
             </content>
         </ScrollPane>
     </children>
 </AnchorPane>
-
