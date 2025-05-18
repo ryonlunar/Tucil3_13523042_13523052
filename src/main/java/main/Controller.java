@@ -853,15 +853,11 @@ public class Controller {
                 // Update UI di thread utama
                 javafx.application.Platform.runLater(() -> {
                     if (finalGoalState != null) {
-                        appendOutput("Goal state found!");
-                        appendOutput("Nodes visited: " + finalVisitedNodesCount);
-                        appendOutput(String.format("Execution time: %.4f seconds",
-                                (finalEndTime - finalStartTime) / 1000.0));
-
                         showRuntime(finalStartTime, finalEndTime);
                         showVisitedNodeCount(finalVisitedNodesCount);
                         // Tampilkan animasi solusi menggunakan GIF
                         createAndDisplaySolutionGif(finalGoalState);
+                        appendOutput("\nPath Length: " + (animationFrames.size() - 1));
                         // Setelah selesai pencarian dan mendapatkan goalState
                     } else {
                         appendOutput("No solution found.");
@@ -895,8 +891,6 @@ public class Controller {
         // Pada implementasi akhir, metode ini akan membuat GIF animasi dan
         // menampilkannya
 
-        appendOutput("\n--- Solution Path ---");
-
         List<State> path = new ArrayList<>();
         State currState = goalState;
         while (currState != null) {
@@ -904,25 +898,11 @@ public class Controller {
             currState = currState.parent;
         }
 
-        for (int i = 0; i < path.size(); i++) {
-            State state = path.get(i);
-            if (i == 0) {
-                appendOutput("\nInitial State:");
-            } else {
-                appendOutput("\nMove " + i + ": " + state.move);
-            }
-
-            // Display board in text format (akan digantikan dengan frame GIF)
-            appendOutput(boardToString(state.board));
-        }
-
         // TODO: Implementasi pembuatan GIF dari rangkaian state
         // Contoh integrasi dengan GIF (asumsi ada file GIF solusi):
         // For placeholder visualization, use a simple colored rectangle
         // This avoids the null GIF problem
         try {
-            appendOutput("\nCreating animation...");
-
             // Create frames
             animationFrames = new ArrayList<>();
             for (State state : path) {
@@ -979,7 +959,6 @@ public class Controller {
                         }));
                 animationTimeline.setCycleCount(Timeline.INDEFINITE);
                 animationTimeline.play();
-                appendOutput("Animation playing");
             }
         } catch (Exception e) {
             e.printStackTrace();

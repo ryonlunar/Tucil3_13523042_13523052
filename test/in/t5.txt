@@ -1,8 +1,9 @@
 6 6
-2
-   K  
-AAAAAA
-......
-...P..
-...P..
-BB....
+11
+AAB..F
+.PBCDF
+GP.CDF
+G..III
+GHH.LL
+..JJMM
+ K    
