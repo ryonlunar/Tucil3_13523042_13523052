@@ -586,6 +586,10 @@ public class Controller {
 
     @FXML
     private void clearBoard() {
+        vehicleIdCombo.getItems().clear();
+        vehicleIdCombo.getItems().addAll(
+                "P (Primary)", "A", "B", "C", "D",
+                "E", "F", "G", "H", "I", "J", "L", "M", "N", "O", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
         createBoard(); // Recreate the board
     }
 
