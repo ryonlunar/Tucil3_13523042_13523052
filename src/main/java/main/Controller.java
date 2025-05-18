@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -762,13 +761,7 @@ public class Controller {
                     
                     String moveText = frameIndex > 0 ? path.get(frameIndex).move : "Initial";
                     updateFrameLabel(frameIndex, moveText);
-                    
-                    // If animation is running, pause it when user manually changes frame
-                    if (animationTimeline != null && animationTimeline.getStatus() == Animation.Status.RUNNING) {
-                        animationTimeline.pause();
-                        isPaused = true;
-                        pauseButton.setText("Resume");
-                    }
+                
                 });
 
                 // Stop any existing animation
