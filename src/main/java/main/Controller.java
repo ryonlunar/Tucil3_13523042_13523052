@@ -866,6 +866,9 @@ public class Controller {
                         appendOutput("\nPath Length: " + (animationFrames.size() - 1));
                         // Setelah selesai pencarian dan mendapatkan goalState
                     } else {
+                        showRuntime(finalStartTime, finalEndTime);
+                        showVisitedNodeCount(finalVisitedNodesCount);
+                        appendOutput("\nPath Length: 0");
                         appendOutput("No solution found.");
                     }
                 });
