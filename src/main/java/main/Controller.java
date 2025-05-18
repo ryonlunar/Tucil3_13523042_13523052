@@ -85,6 +85,7 @@ public class Controller {
     @FXML private Slider animationSlider;
     @FXML private Label frameLabel;
 
+    @FXML private HBox algoSelectionBox;
     // Fields to store board state
     private char[][] directInputBoard;
     private int boardRows;
@@ -116,6 +117,19 @@ public class Controller {
             filePreviewSection.setManaged(newVal);
             directInputSection.setVisible(!newVal);
             directInputSection.setManaged(!newVal);
+
+                    // Show algorithm selection and run button for file input
+            algoSelectionBox.setVisible(newVal);
+            algoSelectionBox.setManaged(newVal);
+            updateHeuristicBoxVisibility();
+            runButton.setVisible(newVal);
+            runButton.setManaged(newVal);
+            pauseButton.setVisible(newVal);
+            pauseButton.setManaged(newVal);
+            animationView.setVisible(newVal);
+            animationView.setManaged(newVal);
+            outputArea.setVisible(newVal);
+            outputArea.setManaged(newVal);
         });
 
         directInputRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
@@ -125,7 +139,20 @@ public class Controller {
             filePreviewSection.setManaged(!newVal);
             directInputSection.setVisible(newVal);
             directInputSection.setManaged(newVal);
-                
+            
+            // Hide algorithm selection and run button for direct input
+            algoSelectionBox.setVisible(!newVal);
+            algoSelectionBox.setManaged(!newVal);
+            updateHeuristicBoxVisibility();
+            runButton.setVisible(!newVal);
+            runButton.setManaged(!newVal);
+            pauseButton.setVisible(!newVal);
+            pauseButton.setManaged(!newVal);
+            outputArea.setVisible(!newVal);
+            outputArea.setManaged(!newVal);
+            animationView.setVisible(!newVal);
+            animationView.setManaged(!newVal);
+
             if (newVal && directInputBoard == null) {
                 // Auto-create a board when switching to direct input
                 createBoard();
@@ -147,6 +174,15 @@ public class Controller {
         gaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
         });
+    }
+
+    private void updateHeuristicBoxVisibility() {
+        boolean algorithmsRequiringHeuristic = astarRadio.isSelected() || gbfsRadio.isSelected() || 
+                                            idaRadio.isSelected() || gaRadio.isSelected();
+        boolean isFileInputSelected = fileInputRadio.isSelected();
+        
+        heuristicBox.setVisible(isFileInputSelected && algorithmsRequiringHeuristic);
+        heuristicBox.setManaged(isFileInputSelected && algorithmsRequiringHeuristic);
     }
 
     @FXML
@@ -278,8 +314,10 @@ public class Controller {
 
         // Check if the vehicle fits
         if (isHorizontal) {
-            if (startCol + length > boardCols) {
+            if (startCol + length - 1> boardCols) {
                 showAlert("Error", "Vehicle doesn't fit horizontally");
+                // Debug info
+                System.out.println("Debug: startCol=" + startCol + ", length=" + length + ", boardCols=" + boardCols);
                 return;
             }
 
@@ -307,8 +345,9 @@ public class Controller {
                 }
             }
         } else { // Vertical
-            if (startRow + length > boardRows) {
+            if (startRow + length - 1 > boardRows) {
                 showAlert("Error", "Vehicle doesn't fit vertically");
+                System.out.println("Debug: startRow=" + startRow + ", length=" + length + ", boardRows=" + boardRows);
                 return;
             }
 
@@ -342,11 +381,9 @@ public class Controller {
         placeVehicleButton.setText("Place Vehicle");
 
         // Remove the used vehicle ID from combo box if not primary
-        if (vehicleId != 'P') {
-            vehicleIdCombo.getItems().remove(selectedVehicle);
-            if (!vehicleIdCombo.getItems().isEmpty()) {
-                vehicleIdCombo.setValue(vehicleIdCombo.getItems().get(0));
-            }
+        vehicleIdCombo.getItems().remove(selectedVehicle);
+        if (!vehicleIdCombo.getItems().isEmpty()) {
+            vehicleIdCombo.setValue(vehicleIdCombo.getItems().get(0));
         }
     }
 
@@ -482,11 +519,14 @@ public class Controller {
                 for (int i = 1; i <= boardRows; i++) {
                     for (int j = 1; j <= boardCols; j++) {
                         writer.print(directInputBoard[i][j]);
+                        if (j == boardCols && i != exitRow) {
+                            writer.print(' ');
+                        }
                     }
-
                     if (i == exitRow) {
                         writer.print('K');
                     }
+
                     writer.println();
                 }
             }
@@ -986,6 +1026,7 @@ public class Controller {
             fileInputRadio.setSelected(true);
             updateFilePreview(tempFile.getAbsolutePath());
             appendOutput("Board generated and ready to run.");
+            runAlgorithm();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Failed to generate board file: " + e.getMessage());
