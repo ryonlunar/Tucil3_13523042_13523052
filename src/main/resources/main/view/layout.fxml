@@ -86,7 +86,7 @@
                     </VBox>
 
                     <!-- Algorithm selection section (existing) -->
-                    <HBox spacing="10" alignment="CENTER_LEFT">
+                    <HBox fx:id="algoSelectionBox" spacing="10" alignment="CENTER_LEFT">
                         <Label text="Algorithm Selection" styleClass="section-label"/>
                         <RadioButton fx:id="ucsRadio" text="UCS" selected="true">
                             <toggleGroup>
@@ -113,9 +113,7 @@
                     </HBox>
 
                     <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
-                    
                     <!-- Animation section (existing) -->
-                    <Label text="Solution Animation" styleClass="section-label"/>
                     <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
                     <HBox spacing="10" alignment="CENTER">
                         <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
