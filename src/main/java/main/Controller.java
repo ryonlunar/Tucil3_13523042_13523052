@@ -100,6 +100,8 @@ public class Controller {
     @FXML
     private void initialize() {
         // Initialize length options
+        directInputSection.setVisible(false);
+        directInputSection.setManaged(false);
         lengthCombo.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         lengthCombo.setValue("2");
 
@@ -118,7 +120,7 @@ public class Controller {
             directInputSection.setVisible(!newVal);
             directInputSection.setManaged(!newVal);
 
-                    // Show algorithm selection and run button for file input
+            // Show algorithm selection and run button for file input
             algoSelectionBox.setVisible(newVal);
             algoSelectionBox.setManaged(newVal);
             updateHeuristicBoxVisibility();
@@ -152,6 +154,10 @@ public class Controller {
             outputArea.setManaged(!newVal);
             animationView.setVisible(!newVal);
             animationView.setManaged(!newVal);
+            animationSlider.setVisible(!newVal);
+            animationSlider.setManaged(!newVal);
+            frameLabel.setVisible(!newVal);
+            frameLabel.setManaged(!newVal);
 
             if (newVal && directInputBoard == null) {
                 // Auto-create a board when switching to direct input
@@ -312,6 +318,12 @@ public class Controller {
             return;
         }
 
+        // Check if Id already exist in vehicleCombo
+        if (directInputVehicles.containsKey(vehicleId)) {
+            showAlert("Error", "vehicle already exists");
+            return;
+        }
+
         // Check if the vehicle fits
         if (isHorizontal) {
             if (startCol + length - 1> boardCols) {
@@ -381,9 +393,11 @@ public class Controller {
         placeVehicleButton.setText("Place Vehicle");
 
         // Remove the used vehicle ID from combo box if not primary
-        vehicleIdCombo.getItems().remove(selectedVehicle);
-        if (!vehicleIdCombo.getItems().isEmpty()) {
-            vehicleIdCombo.setValue(vehicleIdCombo.getItems().get(0));
+        if (!directInputVehicles.get(selectedVehicle).isPrimary) {
+            vehicleIdCombo.getItems().remove(selectedVehicle);
+            if (!vehicleIdCombo.getItems().isEmpty()) {
+                vehicleIdCombo.setValue(vehicleIdCombo.getItems().get(0));
+            }
         }
     }
 
@@ -1026,7 +1040,6 @@ public class Controller {
             fileInputRadio.setSelected(true);
             updateFilePreview(tempFile.getAbsolutePath());
             appendOutput("Board generated and ready to run.");
-            runAlgorithm();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Failed to generate board file: " + e.getMessage());

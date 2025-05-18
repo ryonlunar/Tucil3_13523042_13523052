@@ -111,10 +111,11 @@
                         <RadioButton fx:id="chebysevRadio" text="Chebysev" toggleGroup="$heuristicGroup" />
                         <RadioButton fx:id="evolvedRadio" text="Evolved" toggleGroup="$heuristicGroup" />
                     </HBox>
-
-                    <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
-                    <!-- Animation section (existing) -->
-                    <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
+                    <VBox spacing="15" alignment="CENTER">
+                        <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
+                        <!-- Animation section (existing) -->
+                        <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
+                    </VBox>
                     <VBox alignment="CENTER" spacing="10">
                         <Label fx:id="frameLabel" text="Frame: 0/0" />
                         <Slider fx:id="animationSlider" prefWidth="400" />
