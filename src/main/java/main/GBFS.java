@@ -18,14 +18,10 @@ public class GBFS extends BaseSearch {
     public void search() {
         queue.add(initState);
         while (!queue.isEmpty()) {
-            // System.out.println("DEBUG GBFS : Visit node #" + visitedNodesCount);
             visitedNodesCount++;
             State current = queue.poll();
-            // System.out.println("Heuristic Cost: " + current.heuristicCost);
             if (current.isGoal(current.vehicles.get('P'))) {
-                // handle solusi
                 goalState = current;
-                // System.out.println("DEBUG GBFS: GOAL STATE DITEMUKAN pada node #" + visitedNodesCount);
                 return;
             }
             processState(current);
@@ -35,7 +31,6 @@ public class GBFS extends BaseSearch {
     @Override
     public void processState(State currState) {
         if (visited.contains(currState)) {
-            // System.out.println("DEBUG GBFS: State sudah dikunjungi, skipping");
             return;
         }
         visited.add(currState);

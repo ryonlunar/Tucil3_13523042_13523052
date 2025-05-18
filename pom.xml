@@ -30,6 +30,16 @@
             <artifactId>animated-gif-lib</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId> <!-- Diperlukan untuk SwingFXUtils -->
+            <version>${javafx.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

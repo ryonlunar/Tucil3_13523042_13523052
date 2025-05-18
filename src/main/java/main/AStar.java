@@ -16,16 +16,13 @@ public class AStar extends BaseSearch {
         this.closedSet = new HashSet<>();
     }
     
-    // Placeholder untuk heuristic GBFS yang akan diintegrasikan nanti
     private int heuristic(State state) {
-        // Placeholder for future implementation (GBFS heuristic)
         return state.getHeuristicCost(state.methode);
     }
 
     @Override
     public void search() {
         openSet.add(initState);
-        System.out.println("DEBUG AStar: Memulai pencarian dengan heuristic " + initState.methode);
         
         while(!openSet.isEmpty()) {
             State current = openSet.poll();
@@ -33,13 +30,11 @@ public class AStar extends BaseSearch {
             
             if(current.isGoal(current.vehicles.get('P'))) {
                 goalState = current;
-                System.out.println("DEBUG AStar: Solusi ditemukan di node ke-" + visitedNodesCount);
                 return;
             }
             
             processState(current);
         }
-        System.out.println("DEBUG AStar: Pencarian selesai tanpa solusi");
     }
 
     @Override
@@ -49,7 +44,6 @@ public class AStar extends BaseSearch {
         closedSet.add(current);
         for(State successor : current.generateSucc()) {
             if(!closedSet.contains(successor)) {
-                // Update cost dengan heuristic
                 successor.cost = current.cost + 1 + heuristic(successor);
                 openSet.add(successor);
             }
@@ -63,7 +57,6 @@ public class AStar extends BaseSearch {
 
     @Override
     public int getVisitedNodesCount() {
-        // TODO Auto-generated method stub
         return visitedNodesCount;
     }
 }

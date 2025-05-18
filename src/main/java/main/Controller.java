@@ -1,13 +1,17 @@
 package main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
+import javafx.embed.swing.SwingFXUtils;
+// import for buffered image
+import java.awt.image.BufferedImage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -22,6 +26,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,7 +36,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-
+import com.madgag.gif.fmsware.AnimatedGifEncoder;
 public class Controller {
 
     @FXML private TextField inputField;
@@ -95,7 +100,8 @@ public class Controller {
     private boolean isPlacingVehicle = false;
     private boolean isPlacingExit = false;
     private Map<Character, Vehicle> directInputVehicles = new HashMap<>();
-
+    // Add this field
+    @FXML private Button saveGIFButton;
     // Menambahkan metode baru
     @FXML
     private void initialize() {
@@ -104,7 +110,6 @@ public class Controller {
         directInputSection.setManaged(false);
         lengthCombo.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         lengthCombo.setValue("2");
-
         // Initialize vehicle ID options
         vehicleIdCombo.getItems().addAll(
                 "P (Primary)", "A", "B", "C", "D",
@@ -132,6 +137,10 @@ public class Controller {
             animationView.setManaged(newVal);
             outputArea.setVisible(newVal);
             outputArea.setManaged(newVal);
+            saveGIFButton.setVisible(newVal);
+            saveGIFButton.setManaged(newVal);
+            saveGIFButton.setDisable(false);
+            
         });
 
         directInputRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
@@ -158,7 +167,8 @@ public class Controller {
             animationSlider.setManaged(!newVal);
             frameLabel.setVisible(!newVal);
             frameLabel.setManaged(!newVal);
-
+            saveGIFButton.setVisible(!newVal);
+            saveGIFButton.setManaged(!newVal);
             if (newVal && directInputBoard == null) {
                 // Auto-create a board when switching to direct input
                 createBoard();
@@ -753,6 +763,15 @@ public class Controller {
         // Untuk implementasi sementara, kita akan menampilkan solusi sebagai text
         // Pada implementasi akhir, metode ini akan membuat GIF animasi dan
         // menampilkannya
+        // saveGIFButton.setDisable(false);
+        if (goalState == null) {
+            appendOutput("Error: No solution path to animate");
+            return;
+        }
+
+        if (goalState.parent == null) {
+            appendOutput("Warning: Solution path only contains initial state");
+        }
 
         appendOutput("\n--- Solution Path ---");
 
@@ -836,6 +855,8 @@ public class Controller {
                 animationTimeline.setCycleCount(Timeline.INDEFINITE);
                 animationTimeline.play();
                 appendOutput("Animation playing");
+            } else {
+                appendOutput("No solution found.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1077,4 +1098,51 @@ public class Controller {
             showAlert("Error", "Failed to load preview: " + e.getMessage());
         }
     }
+        // Ketika GIF sudah dibuat, bisa dimuat dan ditampilkan:
+    @FXML
+    private void saveGIF() {
+        if (animationFrames == null || animationFrames.isEmpty()) {
+            showAlert("Error", "No animation frames available to save");
+            return;
+        }
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Animation GIF");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("GIF Files", "*.gif"));
+        File file = fileChooser.showSaveDialog(animationView.getScene().getWindow());
+        
+        if (file != null) {
+            try {
+                generateGIF(file);
+                appendOutput("Animation saved to: " + file.getAbsolutePath());
+            } catch (Exception e) {
+                appendOutput("Error saving GIF: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void generateGIF(File outputFile) throws Exception {
+        AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+        if (!encoder.start(outputFile.getAbsolutePath())) {
+            throw new IOException("Failed to initialize GIF encoder");
+        }
+        
+        encoder.setDelay(500);
+        encoder.setRepeat(0);
+        
+        try {
+            for (WritableImage frame : animationFrames) {
+                BufferedImage bufferedFrame = SwingFXUtils.fromFXImage(frame, null);
+                if (bufferedFrame == null) {
+                    throw new Exception("Failed to convert frame to BufferedImage");
+                }
+                encoder.addFrame(bufferedFrame);
+            }
+        } finally {
+            encoder.finish();
+        }
+    }
+
 }

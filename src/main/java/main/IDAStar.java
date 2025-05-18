@@ -15,7 +15,6 @@ public class IDAStar extends BaseSearch {
     @Override
     public void search(){
         while (true){
-            System.out.println("DEBUG IDA*: Threshold saat ini: " + threshold);
             int result = DLS(initState, 0);
             if (result == -1) {
                 goalState = null;
@@ -48,7 +47,6 @@ public class IDAStar extends BaseSearch {
 
     @Override
     protected void processState(State current) {
-        // Tidak diperlukan untuk IDA*
     }
     public State getGoalState() {
         return goalState;

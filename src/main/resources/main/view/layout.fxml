@@ -117,6 +117,7 @@
                     <VBox alignment="CENTER" spacing="10">
                         <Label fx:id="frameLabel" text="Frame: 0/0" />
                         <Slider fx:id="animationSlider" prefWidth="400" />
+                        <Button fx:id="saveGIFButton" text="Save GIF" onAction="#saveGIF"/>
                         <HBox spacing="10" alignment="CENTER">
                             <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
                             <Button text="New Test Case" onAction="#handleNewTestCase"/>

@@ -5,8 +5,8 @@ import java.util.*;
 public class GA {
     private static final int POPULATION_SIZE = 30;
     private static final double MUTATION_RATE = 0.1;
-    private static final int MAX_GENERATIONS = 20; // Dikurangi dari 100
-    private static final int STALL_GENERATIONS = 2; // Batas generasi 
+    private static final int MAX_GENERATIONS = 20; 
+    private static final int STALL_GENERATIONS = 2; 
     
     private State initState;
     
@@ -18,28 +18,22 @@ public class GA {
         List<HeuristicIndividual> population = initializePopulation();
         evaluatePopulationFitness(population);
         
-        // Tambahkan variabel untuk melacak perbaikan
+        
         int lastImprovement = 0;
         int bestNodesVisited = Integer.MAX_VALUE;
         HeuristicSolution bestSolution = null;
         
         for(int gen=0; gen < MAX_GENERATIONS; gen++) {
-            // Cek apakah ada perbaikan
+            
             HeuristicSolution currentBest = getBestSolution(population);
             if (currentBest != null && currentBest.nodesVisited < bestNodesVisited) {
                 bestNodesVisited = currentBest.nodesVisited;
                 lastImprovement = gen;
                 bestSolution = currentBest;
-                System.out.println("GA: Perbaikan pada generasi " + gen + ", nodes = " + bestNodesVisited);
             }
             
-            // Berhenti jika tidak ada perbaikan dalam beberapa generasi
-            if (gen - lastImprovement >= STALL_GENERATIONS) {
-                System.out.println("GA berhenti di generasi " + gen + " karena tidak ada perbaikan dalam " + 
-                                  STALL_GENERATIONS + " generasi terakhir");
-                // print visited nodes count
-                System.out.println("GA: " + bestSolution.nodesVisited);
-                            
+            
+            if (gen - lastImprovement >= STALL_GENERATIONS) {                            
                 break;
             }
             
@@ -140,7 +134,7 @@ public class GA {
             return copy;
         }
 
-        // Getters and setters
+        
         public double getWeight(String heuristic) { return weights.get(heuristic); }
         public void setWeight(String h, double w) { weights.put(h, w); }
         public List<String> getHeuristics() { return new ArrayList<>(weights.keySet()); }
