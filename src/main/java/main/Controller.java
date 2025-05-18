@@ -48,7 +48,7 @@ public class Controller {
     @FXML
     private RadioButton ucsRadio, gbfsRadio, astarRadio;
     @FXML
-    private RadioButton manhattanRadio, blockedRadio;
+    private RadioButton manhattanRadio, blockedRadio, gaRadio, evolvedRadio;
     @FXML
     private HBox heuristicBox;
     @FXML
@@ -152,6 +152,10 @@ public class Controller {
         });
 
         idaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
+        });
+
+        gaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
         });
     }
@@ -597,14 +601,14 @@ public class Controller {
         // Mengosongkan hasil sebelumnya
         outputArea.clear();
         String heuristiCh = blockedRadio.isSelected() ? "BLOCKED"
-                : combinedMBRadio.isSelected() ? "combinedMB" : chebysevRadio.isSelected() ? "CHEBYSHEV" : "MANHATTAN";
+                : combinedMBRadio.isSelected() ? "combinedMB" : chebysevRadio.isSelected() ? "CHEBYSHEV" : evolvedRadio.isSelected() ? "EVOLVED" : "MANHATTAN";
         // Menjalankan algoritma di background agar UI tetap responsif
         CompletableFuture.runAsync(() -> {
             try {
                 // Parse input file
                 InputParser.Result result = InputParser.parse(filePath,
                         ucsRadio.isSelected() ? "UCS"
-                                : astarRadio.isSelected() ? "A*" : gbfsRadio.isSelected() ? "GBFS" : "IDA*",
+                                : astarRadio.isSelected() ? "A*" : gbfsRadio.isSelected() ? "GBFS" : idaRadio.isSelected() ? "IDA*" : "GA",
                         heuristiCh);
 
                 appendOutput("Running " + result.algo + " algorithm...");
@@ -641,6 +645,16 @@ public class Controller {
                         idaStar.search();
                         goalState = idaStar.getGoalState();
                         visitedNodesCount = idaStar.getVisitedNodesCount();
+                        break;
+                    case "GA":
+                        result.initState.methode = result.heuristic;
+                        GA ga = new GA(result.initState);
+                        GA.HeuristicSolution solution = ga.evolveHeuristic();
+                        goalState = solution.solutionState;
+                        visitedNodesCount = solution.nodesVisited;
+                        // print runtime
+                        long endTime = System.currentTimeMillis();
+                        System.out.println("Execution time: " + (endTime - startTime) / 1000.0 + " seconds");
                         break;
                 }
                 long endTime = System.currentTimeMillis();
