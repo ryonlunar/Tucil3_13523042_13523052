@@ -166,19 +166,19 @@ public class Controller {
         });
         // Mengatur listener untuk radio button algoritma
         astarRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            heuristicBox.setVisible(newVal || gbfsRadio.isSelected());
+            updateHeuristicBoxVisibility();
         });
 
         gbfsRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            heuristicBox.setVisible(newVal || astarRadio.isSelected());
+            updateHeuristicBoxVisibility();
         });
 
         idaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
+            updateHeuristicBoxVisibility();
         });
 
         gaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            heuristicBox.setVisible(newVal || astarRadio.isSelected() || gbfsRadio.isSelected());
+            updateHeuristicBoxVisibility();
         });
     }
 
@@ -393,7 +393,7 @@ public class Controller {
         placeVehicleButton.setText("Place Vehicle");
 
         // Remove the used vehicle ID from combo box if not primary
-        if (!directInputVehicles.get(selectedVehicle).isPrimary) {
+        if (vehicleId != 'P') {
             vehicleIdCombo.getItems().remove(selectedVehicle);
             if (!vehicleIdCombo.getItems().isEmpty()) {
                 vehicleIdCombo.setValue(vehicleIdCombo.getItems().get(0));
