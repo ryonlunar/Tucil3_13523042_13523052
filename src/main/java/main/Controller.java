@@ -31,78 +31,53 @@ import java.io.PrintWriter;
 
 public class Controller {
 
-    @FXML
-    private TextField inputField;
+    @FXML private TextField inputField;
 
-    @FXML
-    private Label outputLabel;
+    @FXML private Label outputLabel;
 
-    @FXML
-    private Button showButton;
+    @FXML private Button showButton;
 
     // Menambahkan elemen baru
-    @FXML
-    private TextField filePathField;
-    @FXML
-    private Button browseButton;
-    @FXML
-    private RadioButton ucsRadio, gbfsRadio, astarRadio;
-    @FXML
-    private RadioButton manhattanRadio, blockedRadio, gaRadio, evolvedRadio;
-    @FXML
-    private HBox heuristicBox;
-    @FXML
-    private Button runButton;
-    @FXML
-    private TextArea outputArea;
-    @FXML
-    private ImageView animationView;
+    @FXML private TextField filePathField;
+    @FXML private Button browseButton;
+    @FXML private RadioButton ucsRadio, gbfsRadio, astarRadio;
+    @FXML private RadioButton manhattanRadio, blockedRadio, gaRadio, evolvedRadio;
+    @FXML private HBox heuristicBox;
+    @FXML private Button runButton;
+    @FXML private TextArea outputArea;
+    @FXML private ImageView animationView;
 
     private List<WritableImage> animationFrames;
     private int currentFrame = 0;
     private Timeline animationTimeline;
 
-    @FXML
-    private Button pauseButton;
+    @FXML private Button pauseButton;
     private boolean isPaused = false;
 
-    @FXML
-    private RadioButton idaRadio;
+    @FXML private RadioButton idaRadio;
 
-    @FXML
-    private RadioButton combinedMBRadio;
-    @FXML
-    private RadioButton chebysevRadio;
-    @FXML
-    private RadioButton fileInputRadio;
-    @FXML
-    private RadioButton directInputRadio;
-    @FXML
-    private HBox fileInputSection;
-    @FXML
-    private VBox directInputSection;
-    @FXML
-    private TextField rowsField;
-    @FXML
-    private TextField colsField;
-    @FXML
-    private RadioButton horizontalRadio;
-    @FXML
-    private RadioButton verticalRadio;
-    @FXML
-    private ComboBox<String> lengthCombo;
-    @FXML
-    private ComboBox<String> vehicleIdCombo;
-    @FXML
-    private Button placeVehicleButton;
-    @FXML
-    private Button placeExitButton;
-    @FXML
-    private Button clearBoardButton;
-    @FXML
-    private GridPane boardGrid;
-    @FXML
-    private Button saveToFileButton;
+    @FXML private RadioButton combinedMBRadio;
+    @FXML private RadioButton chebysevRadio;
+    @FXML private RadioButton fileInputRadio;
+    @FXML private RadioButton directInputRadio;
+    @FXML private HBox fileInputSection;
+    @FXML private VBox directInputSection;
+    @FXML private TextField rowsField;
+    @FXML private TextField colsField;
+    @FXML private RadioButton horizontalRadio;
+    @FXML private RadioButton verticalRadio;
+    @FXML private ComboBox<String> lengthCombo;
+    @FXML private ComboBox<String> vehicleIdCombo;
+    @FXML private Button placeVehicleButton;
+    @FXML private Button placeExitButton;
+    @FXML private Button clearBoardButton;
+    @FXML private GridPane boardGrid;
+    @FXML private Button saveToFileButton;
+    @FXML private VBox filePreviewSection;
+
+    @FXML private ImageView filePreviewImage;
+
+    @FXML private Button generateBoardButton;
 
     // Fields to store board state
     private char[][] directInputBoard;
@@ -130,13 +105,21 @@ public class Controller {
         // Add listener to input method radio buttons
         fileInputRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             fileInputSection.setVisible(newVal);
+            fileInputSection.setManaged(newVal);
+            filePreviewSection.setVisible(newVal);
+            filePreviewSection.setManaged(newVal);
             directInputSection.setVisible(!newVal);
+            directInputSection.setManaged(!newVal);
         });
 
         directInputRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             fileInputSection.setVisible(!newVal);
+            fileInputSection.setManaged(!newVal);
+            filePreviewSection.setVisible(!newVal);
+            filePreviewSection.setManaged(!newVal);
             directInputSection.setVisible(newVal);
-
+            directInputSection.setManaged(newVal);
+                
             if (newVal && directInputBoard == null) {
                 // Auto-create a board when switching to direct input
                 createBoard();
@@ -550,6 +533,7 @@ public class Controller {
         File selectedFile = fileChooser.showOpenDialog(filePathField.getScene().getWindow());
         if (selectedFile != null) {
             filePathField.setText(selectedFile.getAbsolutePath());
+            updateFilePreview(selectedFile.getAbsolutePath());
         }
     }
 
@@ -781,17 +765,6 @@ public class Controller {
         return sb.toString();
     }
 
-    // Ketika GIF sudah dibuat, bisa dimuat dan ditampilkan:
-    private void loadAndDisplayGif(String gifPath) {
-        try {
-            Image image = new Image(new FileInputStream(gifPath));
-            animationView.setImage(image);
-        } catch (Exception e) {
-            e.printStackTrace();
-            appendOutput("Failed to load animation: " + e.getMessage());
-        }
-    }
-
     private WritableImage createImageFromState(State state) {
         int cellSize = 30;
         int width = state.tot_cols * cellSize;
@@ -968,7 +941,7 @@ public class Controller {
             filePathField.setText(tempFile.getAbsolutePath());
             // Switch ke File Input
             fileInputRadio.setSelected(true);
-
+            updateFilePreview(tempFile.getAbsolutePath());
             appendOutput("Board generated and ready to run.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -976,4 +949,35 @@ public class Controller {
         }
     }
 
+    // Tambahkan method baru untuk update preview
+    private void updateFilePreview(String filePath) {
+        try {
+            // Parse the board file menggunakan InputParser yang sudah ada
+            InputParser.Result result = InputParser.parse(filePath,
+                ucsRadio.isSelected() ? "UCS"
+                : astarRadio.isSelected() ? "A*" 
+                : gbfsRadio.isSelected() ? "GBFS" 
+                : idaRadio.isSelected() ? "IDA*" 
+                : "GA",
+                blockedRadio.isSelected() ? "BLOCKED"
+                : combinedMBRadio.isSelected() ? "combinedMB" 
+                : chebysevRadio.isSelected() ? "CHEBYSHEV" 
+                : evolvedRadio.isSelected() ? "EVOLVED" 
+                : "MANHATTAN");
+            
+            // Buat preview image menggunakan method createImageFromState yang sudah ada
+            // Sesuaikan ukuran ImageView
+            int cellSize = 30; // sama seperti di createImageFromState
+            int width = result.initState.tot_cols * cellSize;
+            int height = result.initState.tot_rows * cellSize;
+            filePreviewImage.setFitWidth(width);
+            filePreviewImage.setFitHeight(height);
+            filePreviewImage.setPreserveRatio(false);
+            WritableImage previewImage = createImageFromState(result.initState);
+            filePreviewImage.setImage(previewImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load preview: " + e.getMessage());
+        }
+    }
 }

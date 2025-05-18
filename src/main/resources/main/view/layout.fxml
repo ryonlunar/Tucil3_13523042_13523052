@@ -39,6 +39,12 @@
                         <TextField fx:id="filePathField" promptText="Choose input file" HBox.hgrow="ALWAYS" />
                         <Button text="Browse" fx:id="browseButton" onAction="#browseFile"/>
                     </HBox>
+                    <!-- Tambahkan section baru untuk preview -->
+                    <VBox spacing="10" fx:id="filePreviewSection" alignment="TOP_LEFT">
+                        <Label text="Board Preview:" />
+                        <ImageView fx:id="filePreviewImage"/>
+                        <Separator visible="false" prefHeight="5" />
+                    </VBox>
                     
                     <!-- Direct Input Section -->
                     <VBox spacing="10" fx:id="directInputSection" visible="false">
@@ -76,11 +82,12 @@
                         
                         <Button text="Save to File" fx:id="saveToFileButton" onAction="#saveToFile" />
                         <Button text="Generate Board" fx:id="generateBoardButton" onAction="#generateAndSaveBoard" />
+                        <Separator visible="false" prefHeight="5" />
                     </VBox>
 
                     <!-- Algorithm selection section (existing) -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Input Method" styleClass="section-label"/>
+                        <Label text="Algorithm Selection" styleClass="section-label"/>
                         <RadioButton fx:id="ucsRadio" text="UCS" selected="true">
                             <toggleGroup>
                                 <ToggleGroup fx:id="algoGroup" />
@@ -108,7 +115,7 @@
                     <Button text="Run Algorithm" fx:id="runButton" onAction="#runAlgorithm" prefWidth="150" />
                     
                     <!-- Animation section (existing) -->
-                    <Label text="Input Method" styleClass="section-label"/>
+                    <Label text="Solution Animation" styleClass="section-label"/>
                     <ImageView fx:id="animationView" fitWidth="400" fitHeight="300" preserveRatio="true" />
                     <HBox spacing="10" alignment="CENTER">
                         <Button fx:id="pauseButton" text="Pause" onAction="#handlePause"/>
@@ -120,3 +127,4 @@
         </ScrollPane>
     </children>
 </AnchorPane>
+
