@@ -3,7 +3,7 @@ package main;
 import java.util.*;
 
 public class GA {
-    private static final int POPULATION_SIZE = 50;
+    private static final int POPULATION_SIZE = 30;
     private static final double MUTATION_RATE = 0.1;
     private static final int MAX_GENERATIONS = 20; // Dikurangi dari 100
     private static final int STALL_GENERATIONS = 2; // Batas generasi 
