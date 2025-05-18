@@ -1,5 +1,20 @@
 package main;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.ImageWriter;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.scene.image.PixelReader;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -86,6 +101,8 @@ public class Controller {
     @FXML private Label frameLabel;
 
     @FXML private HBox algoSelectionBox;
+    @FXML private Button saveToGifButton;
+
     // Fields to store board state
     private char[][] directInputBoard;
     private int boardRows;
@@ -102,6 +119,8 @@ public class Controller {
         // Initialize length options
         directInputSection.setVisible(false);
         directInputSection.setManaged(false);
+        saveToGifButton.setVisible(false);
+        saveToGifButton.setDisable(true);
         lengthCombo.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         lengthCombo.setValue("2");
 
@@ -180,6 +199,128 @@ public class Controller {
         gaRadio.selectedProperty().addListener((obs, oldVal, newVal) -> {
             updateHeuristicBoxVisibility();
         });
+    }
+
+    private BufferedImage convertToBufferedImage(WritableImage writableImage) {
+        int width = (int) writableImage.getWidth();
+        int height = (int) writableImage.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        
+        // Get pixel data from WritableImage
+        PixelReader pixelReader = writableImage.getPixelReader();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                javafx.scene.paint.Color color = pixelReader.getColor(x, y);
+                int argb = (
+                    (int) (color.getOpacity() * 255) << 24 |
+                    (int) (color.getRed() * 255) << 16 |
+                    (int) (color.getGreen() * 255) << 8 |
+                    (int) (color.getBlue() * 255)
+                );
+                bufferedImage.setRGB(x, y, argb);
+            }
+        }
+        return bufferedImage;
+    }
+
+    @FXML
+    private void saveAnimationAsGif() {
+        if (animationFrames == null || animationFrames.isEmpty()) {
+            showAlert("Error", "No animation available to save");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Animation as GIF");
+        fileChooser.getExtensionFilters().add(
+                new ExtensionFilter("GIF Images", "*.gif"));
+        File file = fileChooser.showSaveDialog(animationView.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                // Convert all frames to BufferedImage
+                List<BufferedImage> bufferedImages = new ArrayList<>();
+                for (WritableImage frame : animationFrames) {
+                    bufferedImages.add(convertToBufferedImage(frame));
+                }
+                
+                // Save as GIF
+                boolean success = writeGif(bufferedImages, file.getAbsolutePath(), 500); // 500ms delay between frames
+                
+                if (success) {
+                    appendOutput("Animation saved to: " + file.getAbsolutePath());
+                } else {
+                    showAlert("Error", "Failed to save animation");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to save animation: " + e.getMessage());
+            }
+        }
+    }
+
+    private boolean writeGif(List<BufferedImage> frames, String outputPath, int delayMs) {
+        try {
+            ImageWriter writer = ImageIO.getImageWritersByFormatName("gif").next();
+            ImageOutputStream ios = new FileImageOutputStream(new File(outputPath));
+            writer.setOutput(ios);
+            writer.prepareWriteSequence(null);
+            
+            for (BufferedImage img : frames) {
+                IIOMetadata metadata = getMetadata(writer, delayMs);
+                writer.writeToSequence(new IIOImage(img, null, metadata), null);
+            }
+            
+            writer.endWriteSequence();
+            ios.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private IIOMetadata getMetadata(ImageWriter writer, int delayMs) throws IOException {
+        // Create a correct ImageTypeSpecifier for GIF
+        BufferedImage dummyImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        ImageTypeSpecifier imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
+        
+        // Get metadata using the correct ImageTypeSpecifier
+        ImageWriteParam params = writer.getDefaultWriteParam();
+        IIOMetadata metadata = writer.getDefaultImageMetadata(imageTypeSpecifier, params);
+        
+        String metaFormat = metadata.getNativeMetadataFormatName();
+        IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree(metaFormat);
+        
+        IIOMetadataNode graphicsControlExtension = getNode(root, "GraphicControlExtension");
+        graphicsControlExtension.setAttribute("disposalMethod", "none");
+        graphicsControlExtension.setAttribute("userInputFlag", "FALSE");
+        graphicsControlExtension.setAttribute("transparentColorFlag", "FALSE");
+        graphicsControlExtension.setAttribute("delayTime", Integer.toString(delayMs / 10)); // In 1/100th of a second
+        graphicsControlExtension.setAttribute("transparentColorIndex", "0");
+        
+        IIOMetadataNode appExtensions = getNode(root, "ApplicationExtensions");
+        IIOMetadataNode appNode = new IIOMetadataNode("ApplicationExtension");
+        appNode.setAttribute("applicationID", "NETSCAPE");
+        appNode.setAttribute("authenticationCode", "2.0");
+        appNode.setUserObject(new byte[] { 0x1, 0, 0 }); // Loop indefinitely
+        appExtensions.appendChild(appNode);
+        
+        metadata.setFromTree(metaFormat, root);
+        return metadata;
+    }
+
+    private IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName) {
+        int nNodes = rootNode.getLength();
+        for (int i = 0; i < nNodes; i++) {
+            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)) {
+                return (IIOMetadataNode) rootNode.item(i);
+            }
+        }
+        
+        IIOMetadataNode node = new IIOMetadataNode(nodeName);
+        rootNode.appendChild(node);
+        return node;
     }
 
     private void updateHeuristicBoxVisibility() {
@@ -803,6 +944,9 @@ public class Controller {
                 animationSlider.setSnapToTicks(true);
                 animationSlider.setShowTickMarks(true);
                 animationSlider.setShowTickLabels(true);
+
+                saveToGifButton.setVisible(true);
+                saveToGifButton.setDisable(false);
 
                 // Update frame label
                 updateFrameLabel(0, path.get(0).move);
