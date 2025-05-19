@@ -1,109 +1,101 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" class="logo" width="120"/>
+# Penyelesaian Puzzle Rush Hour Menggunakan Algoritma Pathfinding
 
-# Rush Hour Solver
+[![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)
+[![JavaFX](https://img.shields.io/badge/JavaFX-007396?style=for-the-badge&logo=java&logoColor=white)](https://openjfx.io/)
+[![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
 
 Rush Hour Solver adalah aplikasi berbasis JavaFX yang dirancang untuk memecahkan permainan puzzle Rush Hour menggunakan berbagai algoritma pencarian. Program ini memungkinkan pengguna untuk memasukkan konfigurasi papan permainan melalui file teks atau mendesain papan secara langsung melalui antarmuka grafis yang intuitif.
 
-## Fitur Utama
+Program ini digunakan untuk menyelesaikan puzzle Rush Hour menggunakan algoritma pathfinding seperti UCS, GBFS, A*, IDA*, dan Genetic Algorithm dengan berbagai pilihan heuristik. Cocok untuk mahasiswa, peneliti, dan pecinta puzzle dalam konteks pembelajaran algoritma pencarian dan pemecahan masalah.
 
-- Input papan permainan melalui file atau pembuatan langsung
-- Mendukung beberapa algoritma pencarian: UCS, GBFS, A*, IDA*, dan Genetic Algorithm (GA)
-- Berbagai opsi heuristik: Manhattan Distance, Blocked Vehicles, Combined, Chebyshev, dan Evolved
-- Visualisasi solusi dengan animasi
-- Kemampuan menyimpan animasi solusi sebagai file GIF
-- Antarmuka pengguna yang interaktif dan mudah digunakan
+---
 
+## 👥 Kontributor
 
-## Requirements
+| NIM         | Nama Lengkap            |
+|-------------|-------------------------|
+| 13523042    | Farhan Abdullah         |
+| 13523052    | Adhimas Aryo Bimo       |
 
-- Java Development Kit (JDK) 11 atau lebih baru
-- Apache Maven
-- JavaFX
-- Animated GIF library for Java
+---
 
+## ⚙️ Requirement
 
-## Instalasi
+Tuliskan requirement atau dependensi yang dibutuhkan untuk menjalankan program:
 
-### 1. Instalasi JDK
+- **Bahasa pemrograman**: Java 11 atau lebih baru
+- **Build Tool**: Apache Maven
+- **Library eksternal**: 
+  - JavaFX
+  - Animated GIF library for Java
+- **Sistem Operasi**: Linux/Windows/macOS
+- **IDE (opsional)**: IntelliJ IDEA, Eclipse, VSCode
 
-Pastikan JDK telah terinstal di komputer Anda. Untuk memeriksa versi Java:
+---
 
+## 🔧 Instalasi
+
+Langkah-langkah untuk mengunduh dan menyiapkan proyek:
+
+### 1. Clone Repository
 ```bash
+git clone https://github.com/username/rush-hour-solver.git
+cd rush-hour-solver
+```
+
+### 2. Instalasi JDK (jika belum ada)
+```bash
+# Ubuntu/Debian
+sudo apt install openjdk-11-jdk
+
+# Verifikasi instalasi
 java -version
 ```
 
-Jika belum terinstal, Anda dapat menginstalnya dengan:
-
+### 3. Instalasi JavaFX
 ```bash
-sudo apt install openjdk-11-jdk
-```
-
-
-### 2. Instalasi JavaFX
-
-Untuk menginstal JavaFX di Ubuntu, gunakan perintah:
-
-```bash
+# Ubuntu/Debian
 sudo apt install openjfx
-```
 
-Atau, Anda dapat menggunakan Snap:
-
-```bash
+# Atau menggunakan Snap
 sudo snap install openjfx
 ```
 
-
-### 3. Instalasi Maven
-
-Maven diperlukan untuk mengelola dependensi dan membangun proyek. Install dengan:
-
+### 4. Instalasi Maven
 ```bash
+# Ubuntu/Debian
 sudo apt install maven
 ```
 
-
-## Kompilasi Program
-
-1. Pertama, clone repositori atau ekstrak sumber kode ke direktori lokal
-2. Masuk ke direktori proyek:
-
-```bash
-cd [direktori-proyek]
-```
-
-3. Download semua dependensi yang diperlukan:
-
+### 5. Download Dependencies
 ```bash
 mvn clean install
 ```
 
-4. Kompilasi program:
+---
 
+## 🚀 Cara Menjalankan Program
+
+### Kompilasi Program
 ```bash
 mvn compile
 ```
 
-
-## Cara Menjalankan Program
-
-Setelah kompilasi berhasil, program dapat dijalankan dengan perintah:
-
+### Menjalankan Aplikasi
 ```bash
 mvn javafx:run
 ```
 
-Atau, Anda dapat mengompilasi dan menjalankan program sekaligus dengan:
-
+### Kompilasi dan Jalankan Sekaligus
 ```bash
 mvn compile && mvn javafx:run
 ```
 
+---
 
-## Penggunaan Program
+## 📋 Penggunaan Program
 
 ### Input File
-
 1. Pilih opsi "File Input" pada aplikasi
 2. Klik "Browse" untuk memilih file input (format .txt)
 3. Pilih algoritma pencarian yang diinginkan
@@ -112,7 +104,6 @@ mvn compile && mvn javafx:run
 6. Hasil solusi akan ditampilkan sebagai animasi pada aplikasi
 
 ### Input Langsung
-
 1. Pilih opsi "Direct Input" pada aplikasi
 2. Masukkan ukuran papan (baris dan kolom)
 3. Klik "Create Board" untuk membuat papan kosong
@@ -122,51 +113,50 @@ mvn compile && mvn javafx:run
 7. Setelah selesai, klik "Generate Board" untuk menghasilkan dan menyimpan konfigurasi papan
 8. Kembali ke mode "File Input" dan jalankan algoritma seperti biasa
 
-### Animasi
+---
 
-- Gunakan slider untuk melihat langkah-langkah solusi
-- Tombol "Pause/Resume" untuk menghentikan atau melanjutkan animasi
-- Klik "Save as GIF" untuk menyimpan animasi sebagai file GIF
+## 🎯 Fitur Utama
 
+- **Input Fleksibel**: File input atau pembuat papan langsung
+- **Multi-Algoritma**: UCS, GBFS, A*, IDA*, dan Genetic Algorithm (GA)
+- **Pilihan Heuristik**: Manhattan Distance, Blocked Vehicles, Combined, Chebyshev, dan Evolved
+- **Visualisasi**: Animasi solusi yang interaktif
+- **Export GIF**: Kemampuan menyimpan animasi sebagai file GIF
+- **UI Intuitif**: Antarmuka pengguna yang mudah digunakan
 
-## Format File Input
+---
+
+## 📄 Format File Input
 
 File input berisi konfigurasi papan permainan dalam format teks sederhana:
 
-- Baris pertama: jumlah baris dan kolom papan
-- Baris kedua: jumlah kendaraan (tidak termasuk kendaraan utama)
-- Baris-baris berikutnya: representasi papan permainan
-
-Contoh:
-
 ```
 6 6
-5
-......
-.AA...
-.P.BBB
-.P.C..
-.P.C..
-.....K
+12
+ ..AAAB
+ .CDD.B
+KECFPP.
+ ECFGHH
+ EIIGJ.
+ LLMMJ.
 ```
 
-Keterangan:
-
+**Keterangan:**
+- Baris pertama: jumlah baris dan kolom papan
+- Baris kedua: jumlah kendaraan (tidak termasuk kendaraan utama)
 - `.` : sel kosong
 - `P` : kendaraan utama (yang harus mencapai pintu keluar)
 - `K` : pintu keluar
 - `A-Z` : kendaraan lain
 
+---
 
-## Author
+## 🎮 Kontrol Animasi
 
-| NIM         | Nama Lengkap            |
-|-------------|-------------------------|
-| 13523042  | Farhan Abdullah  |
-| 13523052  | Adhimas Aryo Bimo    |
+- **Slider**: Navigasi manual langkah-langkah solusi
+- **Pause/Resume**: Menghentikan atau melanjutkan animasi
+- **Save as GIF**: Menyimpan animasi sebagai file GIF
 
 ---
 
 *Program ini dibuat sebagai bagian dari Tugas Kuliah Teknik Informatika.*
-
-<div style="text-align: center">⁂</div>
