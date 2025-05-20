@@ -161,9 +161,7 @@ KECFPP.
 
 ## Tutorial Cara Menggunakan program
 
-<video width="640" height="480" controls>
-  <source src="https://github.com/ryonlunar/Tucil3_13523042_13523052/blob/main/tutorial.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![How to Use Program](https://github.com/ryonlunar/Tucil3_13523042_13523052/blob/main/tutorial.mp4)]
+
 
 *Program ini dibuat sebagai bagian dari Tugas Kuliah Teknik Informatika.*
