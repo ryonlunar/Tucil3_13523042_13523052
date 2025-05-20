@@ -159,4 +159,11 @@ KECFPP.
 
 ---
 
+## Tutorial Cara Menggunakan program
+
+<video width="640" height="480" controls>
+  <source src="tutorial.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 *Program ini dibuat sebagai bagian dari Tugas Kuliah Teknik Informatika.*

@@ -185,7 +185,10 @@ public class Controller {
             animationSlider.setManaged(!newVal);
             frameLabel.setVisible(!newVal);
             frameLabel.setManaged(!newVal);
-
+            saveToGifButton.setVisible(!newVal);
+            saveToGifButton.setDisable(!newVal);
+            saveSolutionToFileButton.setVisible(!newVal);
+            saveSolutionToFileButton.setDisable(!newVal);
             if (newVal && directInputBoard == null) {
                 // Auto-create a board when switching to direct input
                 createBoard();
@@ -1271,6 +1274,15 @@ public class Controller {
             fileInputRadio.setSelected(true);
             updateFilePreview(tempFile.getAbsolutePath());
             appendOutput("Board generated and ready to run.");
+            // buat animasinya berhenti
+            stopAnimation();
+            // Hapus semua frame animasi
+            animationFrames.clear();
+            animationView.setImage(null);
+            animationSlider.setValue(0);
+            currentFrame = 0;
+            saveToGifButton.setVisible(false);
+            saveToGifButton.setDisable(true);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Failed to generate board file: " + e.getMessage());
