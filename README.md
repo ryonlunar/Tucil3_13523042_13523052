@@ -4,6 +4,8 @@
 [![JavaFX](https://img.shields.io/badge/JavaFX-007396?style=for-the-badge&logo=java&logoColor=white)](https://openjfx.io/)
 [![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
 
+<p align="center"> <img src="https://github.com/ryonlunar/Tucil3_13523042_13523052/blob/main/test/out/Astar/Blocked/1.gif?raw=true" alt="Contoh Solusi Rush Hour dengan A* (Blocked Heuristic)" width="500"/> </p>
+
 Rush Hour Solver adalah aplikasi berbasis JavaFX yang dirancang untuk memecahkan permainan puzzle Rush Hour menggunakan berbagai algoritma pencarian. Program ini memungkinkan pengguna untuk memasukkan konfigurasi papan permainan melalui file teks atau mendesain papan secara langsung melalui antarmuka grafis yang intuitif.
 
 Program ini digunakan untuk menyelesaikan puzzle Rush Hour menggunakan algoritma pathfinding seperti UCS, GBFS, A*, IDA*, dan Genetic Algorithm dengan berbagai pilihan heuristik. Cocok untuk mahasiswa, peneliti, dan pecinta puzzle dalam konteks pembelajaran algoritma pencarian dan pemecahan masalah.
