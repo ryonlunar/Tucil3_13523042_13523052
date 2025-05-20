@@ -18,6 +18,7 @@ import javafx.scene.image.PixelReader;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,7 @@ public class Controller {
     @FXML private Button clearBoardButton;
     @FXML private GridPane boardGrid;
     @FXML private Button saveToFileButton;
+    @FXML private Button saveSolutionToFileButton;
     @FXML private VBox filePreviewSection;
 
     @FXML private ImageView filePreviewImage;
@@ -112,6 +114,10 @@ public class Controller {
     private boolean isPlacingVehicle = false;
     private boolean isPlacingExit = false;
     private Map<Character, Vehicle> directInputVehicles = new HashMap<>();
+    public State finalGoalState = null;
+    public int finalVisitedNodesCount = 0;
+    public long finalStartTime = 0;
+    public long finalEndTime = 0;
 
     // Menambahkan metode baru
     @FXML
@@ -121,6 +127,8 @@ public class Controller {
         directInputSection.setManaged(false);
         saveToGifButton.setVisible(false);
         saveToGifButton.setDisable(true);
+        saveSolutionToFileButton.setVisible(false);
+        saveSolutionToFileButton.setDisable(true);
         lengthCombo.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         lengthCombo.setValue("2");
 
@@ -607,6 +615,90 @@ public class Controller {
         }
     }
 
+    @FXML
+    private void saveSolutionToFile() {
+        // Check if we have a solution
+        if (animationFrames == null || animationFrames.isEmpty()) {
+            showAlert("Error", "No solution available to save.");
+            return;
+        }
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Solution");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        
+        // Set initial directory to the test/out folder
+        String currentDir = System.getProperty("user.dir");
+        String outPath = currentDir.substring(0, currentDir.lastIndexOf(File.separator)) + File.separator + "Tucil3_13523042_13523052" + File.separator + "test" + File.separator + "out";
+        File outDir = new File(outPath);
+        if (outDir.exists()) {
+            fileChooser.setInitialDirectory(outDir);
+        }
+        
+        File file = fileChooser.showSaveDialog(boardGrid.getScene().getWindow());
+        
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(file)) {
+                // Extract stats from the output area
+                String visitedNodesLine = "";
+                String runtimeLine = "";
+                
+                for (String line : outputArea.getText().split("\n")) {
+                    if (line.startsWith("Visited Nodes:")) {
+                        visitedNodesLine = line;
+                    } else if (line.startsWith("Runtime:")) {
+                        runtimeLine = line;
+                    }
+                }
+                
+                // Write stats
+                writer.println("Banyaknya node yang dikunjungi: " + visitedNodesLine.replace("Visited Nodes:", "").trim());
+                writer.println("Waktu eksekusi: " + runtimeLine.replace("Runtime:", "").trim());
+                writer.println();
+                
+                // Build path from goal state
+                List<State> path = new ArrayList<>();
+                State currentState = finalGoalState;
+                while (currentState != null) {
+                    path.add(currentState);
+                    currentState = currentState.parent;
+                }
+                // Reverse to get initial state first
+                Collections.reverse(path);
+                
+                // Write each state
+                for (int i = 0; i < path.size(); i++) {
+                    State state = path.get(i);
+                    if (i == 0) {
+                        writer.println("Papan Awal:");
+                    } else {
+                        String moveText = state.move;
+                        String direction = "";
+                        writer.println("Gerakan " + i + ": " + moveText);
+                    }
+                    
+                    // Print board
+                    char[][] board = state.board;
+                    for (int r = 0; r < board.length; r++) {
+                        for (int c = 0; c < board[0].length; c++) {
+                            writer.print(board[r][c]);
+                        }
+                        writer.println();
+                    }
+                    writer.println();
+                }
+                
+                writer.println("Total langkah: " + (path.size() - 1));
+                
+                appendOutput("Solution saved to: " + file.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to save solution: " + e.getMessage());
+            }
+        }
+    }
+
     private void saveBoard(File file) {
         try (PrintWriter writer = new PrintWriter(file)) {
             // Ensure K exists
@@ -855,10 +947,10 @@ public class Controller {
                 long endTime = System.currentTimeMillis();
 
                 // Simpan status akhir untuk ditampilkan di UI
-                final State finalGoalState = goalState;
-                final int finalVisitedNodesCount = visitedNodesCount;
-                final long finalStartTime = startTime;
-                final long finalEndTime = endTime;
+                finalGoalState = goalState;
+                finalVisitedNodesCount = visitedNodesCount;
+                finalStartTime = startTime;
+                finalEndTime = endTime;
 
                 // Update UI di thread utama
                 javafx.application.Platform.runLater(() -> {
@@ -941,6 +1033,9 @@ public class Controller {
                 saveToGifButton.setVisible(true);
                 saveToGifButton.setDisable(false);
 
+                saveSolutionToFileButton.setVisible(true);
+                saveSolutionToFileButton.setDisable(false);
+                
                 // Update frame label
                 updateFrameLabel(0, path.get(0).move);
 

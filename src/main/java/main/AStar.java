@@ -25,7 +25,7 @@ public class AStar extends BaseSearch {
     @Override
     public void search() {
         openSet.add(initState);
-        System.out.println("DEBUG AStar: Memulai pencarian dengan heuristic " + initState.methode);
+        // System.out.println("DEBUG AStar: Memulai pencarian dengan heuristic " + initState.methode);
         
         while(!openSet.isEmpty()) {
             State current = openSet.poll();
@@ -33,13 +33,13 @@ public class AStar extends BaseSearch {
             
             if(current.isGoal(current.vehicles.get('P'))) {
                 goalState = current;
-                System.out.println("DEBUG AStar: Solusi ditemukan di node ke-" + visitedNodesCount);
+                // System.out.println("DEBUG AStar: Solusi ditemukan di node ke-" + visitedNodesCount);
                 return;
             }
             
             processState(current);
         }
-        System.out.println("DEBUG AStar: Pencarian selesai tanpa solusi");
+        // System.out.println("DEBUG AStar: Pencarian selesai tanpa solusi");
     }
 
     @Override

@@ -1,6 +1,11 @@
 package main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GA {
     private static final int POPULATION_SIZE = 30;
@@ -30,15 +35,15 @@ public class GA {
                 bestNodesVisited = currentBest.nodesVisited;
                 lastImprovement = gen;
                 bestSolution = currentBest;
-                System.out.println("GA: Perbaikan pada generasi " + gen + ", nodes = " + bestNodesVisited);
+                // System.out.println("GA: Perbaikan pada generasi " + gen + ", nodes = " + bestNodesVisited);
             }
             
             // Berhenti jika tidak ada perbaikan dalam beberapa generasi
             if (gen - lastImprovement >= STALL_GENERATIONS) {
-                System.out.println("GA berhenti di generasi " + gen + " karena tidak ada perbaikan dalam " + 
-                                  STALL_GENERATIONS + " generasi terakhir");
+                // System.out.println("GA berhenti di generasi " + gen + " karena tidak ada perbaikan dalam " + 
+                                //   STALL_GENERATIONS + " generasi terakhir");
                 // print visited nodes count
-                System.out.println("GA: " + bestSolution.nodesVisited);
+                // System.out.println("GA: " + bestSolution.nodesVisited);
                             
                 break;
             }

@@ -1,7 +1,11 @@
 package main;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InputParser {
 
@@ -64,7 +68,7 @@ public class InputParser {
                             (j > 0 && board[i][j - 1] == c)) {
                             orientation = Orientation.HORIZONTAL;
                         } else if ((i + 1 < lines.size() && board[i + 1][j] == c) || 
-                                   (i > 0 && board[i - 1][j] == c)) {
+                                (i > 0 && board[i - 1][j] == c)) {
                             orientation = Orientation.VERTICAL;
                         } else {
                             orientation = Orientation.SINGLE;
