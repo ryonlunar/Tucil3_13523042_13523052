@@ -39,8 +39,8 @@ Langkah-langkah untuk mengunduh dan menyiapkan proyek:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/username/rush-hour-solver.git
-cd rush-hour-solver
+git clone git@github.com:ryonlunar/Tucil3_13523042_13523052.git
+cd Tucil3_13523042_13523052
 ```
 
 ### 2. Instalasi JDK (jika belum ada)
