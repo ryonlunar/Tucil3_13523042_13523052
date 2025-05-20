@@ -159,9 +159,12 @@ KECFPP.
 
 ---
 
-## Tutorial Cara Menggunakan program
+## Tutorial Cara Menggunakan Program
 
-[![How to Use Program](https://github.com/ryonlunar/Tucil3_13523042_13523052/blob/main/tutorial.mp4)]
+> **Catatan:** GitHub tidak mendukung pemutaran video langsung di file README.md. Untuk menonton tutorial, silakan klik tautan di bawah ini:
 
+[🎬 Lihat Video Tutorial](https://youtu.be/o9y9BaLwmhM)
+
+Anda dapat mengunduh atau memutar video tersebut secara langsung melalui browser.
 
 *Program ini dibuat sebagai bagian dari Tugas Kuliah Teknik Informatika.*
